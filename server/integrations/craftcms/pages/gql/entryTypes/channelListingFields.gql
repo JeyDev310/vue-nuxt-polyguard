@@ -1,0 +1,7 @@
+fragment pagesChannelListingFields on pagesChannelListing_Entry {
+  ...entryInterfaceFields
+  listFromSection
+  sectionCategories
+  slug
+  title
+}

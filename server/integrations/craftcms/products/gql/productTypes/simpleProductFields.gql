@@ -1,0 +1,157 @@
+fragment simpleProductFields on simpleProduct_Product {
+  __typename
+  returnable
+  excerptText
+  productDescription
+  bigcommerceProduct {
+    ...bigcommerceProductFields
+  }
+  productCtaButton {
+    ... on HyperLinkInterface {
+      ...hyperLinkInterfaceFields
+    }
+  }
+  productSliderMedia {
+    title
+    ... on products_Asset {
+      alt
+      url: url @imagerTransform(width: 900)
+      srcset: url @imagerSrcset(handle: "auto")
+      imageTransforms: imagerTransform(transform: "companion-featured-image") {
+        ... on imagerx {
+          ...imagerxFields
+        }
+      }
+    }
+  }
+  productFeaturesBenefits {
+    __typename
+    ... on blocksFeatureIcon_Entry {
+      id
+      uid
+      primaryText
+      secondaryText
+      featureIcon {
+        __typename
+        ... on media_Asset {
+          url
+          alt
+          title
+        }
+      }
+    }
+  }
+  featuredProductResources {
+    __typename
+    ... on resourcesFileDownload_Entry {
+      id
+      uid
+      url
+      title
+      resourceAssets {
+        __typename
+        ... on resources_Asset {
+          id
+          uid
+          url
+          filename
+          extension
+          title
+        }
+      }
+    }
+    ... on resourcesPageLink_Entry {
+      id
+      uid
+      title
+      url
+      resourceLink {
+        __typename
+        ... on HyperLinkInterface {
+          ...hyperLinkInterfaceFields
+        }
+      }
+    }
+  }
+  productDetails {
+    ... on productDetailsResources_Entry {
+      __typename
+      id
+      typeHandle
+      uid
+      url
+      title
+      heading
+      featuredResources {
+        ... on resourcesFileDownload_Entry {
+          __typename
+          id
+          uid
+          title
+          typeHandle
+          resourceAssets {
+            ... on resources_Asset {
+              __typename
+              title
+              url
+              filename
+              extension
+            }
+          }
+        }
+      }
+    }
+    ... on productDetailsRichText_Entry {
+      __typename
+      id
+      typeHandle
+      uid
+      heading
+      title
+      richText
+    }
+  }
+  commerceCompanionProducts {
+    ... on simpleProduct_Product {
+      __typename
+      productTypeHandle
+      id
+      uri
+      title
+      excerptText
+      productDescription
+      productFeaturedImage(limit: 1) {
+        ... on products_Asset {
+          __typename
+          title
+          alt
+          srcset: url @imagerSrcset(handle: "companion-featured-image")
+          imageTransforms: imagerTransform(
+            transform: "companion-featured-image"
+          ) {
+            ... on imagerx {
+              ...imagerxFields
+            }
+          }
+        }
+      }
+      bigcommerceProduct {
+        ...bigcommerceProductFields
+      }
+    }
+  }
+  productFeaturedImage(limit: 1) {
+    ... on products_Asset {
+      __typename
+      title
+      alt
+      url: url @imagerTransform(width: 900)
+      srcset: url @imagerSrcset(handle: "auto")
+      imageTransforms: imagerTransform(transform: "companion-featured-image") {
+        ... on imagerx {
+          ...imagerxFields
+        }
+      }
+    }
+  }
+}

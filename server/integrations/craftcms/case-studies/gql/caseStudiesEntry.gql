@@ -1,0 +1,34 @@
+fragment caseStudiesDefaultEntry on caseStudiesDefault_Entry {
+  __typename
+  id
+  status
+  title
+  slug
+  uri
+  postDate @formatDateTime(format: "F j, Y")
+  dateUpdated @formatDateTime(format: "F j, Y")
+  excerptText
+  caseStudyCategories {
+    __typename
+    ... on caseStudyCategoriesDefault_Entry {
+      id
+      title
+      typeHandle
+      slug
+    }
+  }
+  featuredImage {
+    ... on media_Asset {
+      __typename
+      id
+      url: url @imagerTransform(width: 900)
+      webpSrcset: url @imagerTransform(handle: "autoWebp")
+      srcset: url @imagerSrcset(handle: "auto")
+      width
+      height
+    }
+  }
+  standardContentBuilder {
+    ...pageSectionsRichTextFields
+  }
+}

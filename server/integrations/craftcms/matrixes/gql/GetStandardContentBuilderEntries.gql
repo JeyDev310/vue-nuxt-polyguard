@@ -1,0 +1,5 @@
+query GetStandardContentBuilderEntries($ids: [QueryArgument]) {
+  standardContentBuilderFieldEntries(id: $ids) {
+    ...standardContentBuilderFields
+  }
+}

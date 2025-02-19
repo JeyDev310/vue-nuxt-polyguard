@@ -1,0 +1,3 @@
+fragment mediaAssetFields on media_Asset {
+  ...assetInterfaceFields
+}

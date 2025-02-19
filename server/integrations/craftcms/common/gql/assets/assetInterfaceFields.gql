@@ -1,0 +1,10 @@
+fragment assetInterfaceFields on AssetInterface {
+  __typename
+  url
+  height
+  width
+  size
+  mimeType
+  title
+  alt
+}

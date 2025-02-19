@@ -1,0 +1,43 @@
+query GetProducts(
+  $limit: Int = 9
+  $offset: Int = 0
+  $productCategoryIds: [QueryArgument] = null
+  $productDivisionsIds: [QueryArgument] = null
+) {
+  productCount(
+    relatedToEntries: [
+      { section: "productCategories", id: $productCategoryIds }
+      { section: "productDivisions", id: $productDivisionsIds }
+    ]
+  )
+  products(
+    relatedToEntries: [
+      { section: "productCategories", id: $productCategoryIds }
+      { section: "productDivisions", id: $productDivisionsIds }
+    ]
+    orderBy: "dateUpdated DESC"
+    limit: $limit
+    offset: $offset
+  ) {
+    ...productInterfaceFields
+
+    ... on simpleProduct_Product {
+      bigcommerceProduct {
+        ...bigcommerceProductFields
+      }
+      productFeaturedImage(limit: 1) {
+        ... on products_Asset {
+          __typename
+          title
+          alt
+          srcset: url @imagerSrcset(handle: "standard-card")
+          imageTransforms: imagerTransform(transform: "standard-card") {
+            ... on imagerx {
+              ...imagerxFields
+            }
+          }
+        }
+      }
+    }
+  }
+}

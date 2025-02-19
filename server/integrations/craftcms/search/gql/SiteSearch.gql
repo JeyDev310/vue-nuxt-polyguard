@@ -1,0 +1,77 @@
+query SiteSearch($searchTerm: String) {
+  products: products(search: $searchTerm, orderBy: "score DESC", limit: 3) {
+    __typename
+    ... on simpleProduct_Product {
+      url
+      uri
+      id
+      title
+      defaultPrice
+      productDescription
+      productFeaturedImage {
+        url: url @imagerTransform(width: 900)
+        # Transform for base image
+        transform_300: url @imagerTransform(width: 300)
+        # Transform for 3x resolution
+        transform_900: url @imagerTransform(width: 900)
+        webpSrcset: url @imagerTransform(handle: "autoWebp")
+        srcset: url @imagerTransform(handle: "auto")
+        width
+        height
+      }
+    }
+  }
+  blogPosts: entries(
+    section: "blog"
+    search: $searchTerm
+    orderBy: "score DESC"
+    limit: 4
+  ) {
+    __typename
+    ... on blogDefault_Entry {
+      title
+      url
+      uri
+      excerptText
+      blogCategories {
+        __typename
+        title
+        uri
+      }
+      blogFeaturedImage {
+        __typename
+        url: url @imagerTransform(width: 650, height: 370)
+        # Transform for base image
+        transform_300: url @imagerTransform(width: 300)
+        # Transform for 3x resolution
+        transform_900: url @imagerTransform(width: 900)
+        webpSrcset: url @imagerTransform(handle: "autoWebp")
+        srcset: url @imagerTransform(handle: "auto")
+        width
+        height
+      }
+    }
+  }
+  resources: entries(
+    section: "resources"
+    search: $searchTerm
+    orderBy: "score DESC"
+    limit: 3
+  ) {
+    __typename
+    ... on resourcesFileDownload_Entry {
+      title
+      resourceAssets {
+        ... on resources_Asset {
+          url
+        }
+      }
+    }
+    ... on resourcesPageLink_Entry {
+      title
+      resourceLink {
+        ...hyperLinkInterfaceFields
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+fragment pageHeroLandingPageFields on pageHeroLandingPage_Entry {
+  ...entryInterfaceFields
+  primaryText
+  secondaryText
+  primaryLink {
+    ariaLabel
+    classes
+    isElement
+    isEmpty
+    link
+    linkText
+    linkUrl
+    linkValue
+    newWindow
+    target
+    text
+    title
+    type
+    url
+    urlPrefix
+    urlSuffix
+    linkUri
+  }
+  backgroundImage {
+    ... on media_Asset {
+      __typename
+      id
+      url: url @imagerTransform(width: 900)
+      webpSrcset: url @imagerTransform(handle: "autoWebp")
+      srcset: url @imagerSrcset(handle: "auto")
+      width
+      height
+    }
+  }
+}

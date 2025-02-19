@@ -1,0 +1,3 @@
+fragment pageSectionsLatestCaseStudiesFields on pageSectionsLatestCaseStudies_Entry {
+  ...entryInterfaceFields
+}

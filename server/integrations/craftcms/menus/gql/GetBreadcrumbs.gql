@@ -1,0 +1,23 @@
+query GetBreadcrumbs($uri: [String]) {
+  entry(uri: $uri) {
+    # Basic entry information
+    id
+    title
+    uri
+
+    # Get ancestors for breadcrumb trail
+    ancestors {
+      id
+      title
+      uri
+      level
+    }
+
+    # Get parent if it exists
+    parent {
+      id
+      title
+      uri
+    }
+  }
+}

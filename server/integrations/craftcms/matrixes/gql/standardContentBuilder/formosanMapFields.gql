@@ -1,0 +1,11 @@
+fragment pageSectionsFormosanMapFields on pageSectionsFormosanMap_Entry {
+  ...entryInterfaceFields
+  primaryText
+  timelineEvents {
+    ... on blocksTimelineEvents_Entry {
+      id
+      eventTitle
+      eventContent
+    }
+  }
+}

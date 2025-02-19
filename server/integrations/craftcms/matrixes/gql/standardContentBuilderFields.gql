@@ -1,0 +1,73 @@
+fragment standardContentBuilderFields on EntryInterface {
+  ...entryInterfaceFields
+
+  ... on pageSectionsCtas2ColumnsBanner_Entry {
+    ...pageSectionsCtas2ColumnsBannerFields
+  }
+  ... on pageSectionsLatestCaseStudies_Entry {
+    ...pageSectionsLatestCaseStudiesFields
+  }
+  ... on pageSectionsCtasSimpleBanner_Entry {
+    ...pageSectionsCtasSimpleBannerFields
+  }
+  ... on pageSectionsResponsiveImageBanner_Entry {
+    ...pageSectionsResponsiveImageBannerFields
+  }
+  ... on pageSectionsFaqs_Entry {
+    ...pageSectionsFaqsFields
+  }
+  ... on pageSectionsCtasEdgeImage_Entry {
+    ...pageSectionsCtasEdgeImageFields
+  }
+  ... on pageSectionsFeaturedCaseStudy_Entry {
+    ...pageSectionsFeaturedCaseStudyFields
+  }
+  ... on pageSectionsProductList_Entry {
+    ...pageSectionsProductListFields
+  }
+  ... on pageSectionsAlternateContent_Entry {
+    ...pageSectionsAlternateContentFields
+  }
+  ... on pageSectionsOembedVideo_Entry {
+    ...pageSectionsOembedVideoFields
+  }
+  ... on pageSectionsFeaturedPages_Entry {
+    ...pageSectionsFeaturedPagesFields
+  }
+  ... on pageSectionsExistingContentModule_Entry {
+    ...pageSectionsExistingContentModuleFields
+  }
+  ... on pageSectionsDivider_Entry {
+    ...pageSectionsDividerFields
+  }
+  ... on pageSectionsFormieForm_Entry {
+    ...pageSectionsFormieFormFields
+  }
+  ... on pageSectionsVideoGrid_Entry {
+    ...pageSectionsVideoGridFields
+  }
+  ... on pageSectionsFeaturedResources_Entry {
+    ...pageSectionsFeaturedResourcesFields
+  }
+  ... on pageSectionsImage_Entry {
+    ...pageSectionsImageFields
+  }
+  ... on pageSectionsRichText_Entry {
+    ...pageSectionsRichTextFields
+  }
+  ... on pageSectionsFeaturedCards_Entry {
+    ...pageSectionsFeaturedCardsFields
+  }
+  ... on pageSectionsCtas2Columns_Entry {
+    ...pageSectionsCtas2ColumnsFields
+  }
+  ... on pageSectionsLatestNews_Entry {
+    ...pageSectionsLatestNewsFields
+  }
+  ... on pageSectionsJumpLinkTarget_Entry {
+    ...pageSectionsJumpLinkTargetFields
+  }
+  ... on pageSectionsFormosanMap_Entry {
+    ...pageSectionsFormosanMapFields
+  }
+}

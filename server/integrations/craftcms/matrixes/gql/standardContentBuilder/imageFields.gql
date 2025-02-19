@@ -1,0 +1,17 @@
+fragment pageSectionsImageFields on pageSectionsImage_Entry {
+  ...entryInterfaceFields
+  imageAsset {
+    ... on media_Asset {
+      __typename
+      id
+      alt
+      title
+      url: url @imagerTransform(width: 800)
+      webpSrcset: url @imagerTransform(handle: "autoWebp")
+      srcset: url @imagerTransform(handle: "auto")
+      width
+      height
+    }
+  }
+  imageCaption
+}

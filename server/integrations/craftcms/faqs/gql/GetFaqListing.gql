@@ -1,0 +1,14 @@
+query GetFaqListing {
+  entryCount(type: "pagesFaqListing")
+  entries(type: "pagesFaqListing") {
+    __typename
+    ...entryInterfaceFields
+    ... on pagesFaqListing_Entry {
+      __typename
+      id
+      title
+      uri
+      url
+    }
+  }
+}

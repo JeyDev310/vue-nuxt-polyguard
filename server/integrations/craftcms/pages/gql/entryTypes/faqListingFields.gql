@@ -1,0 +1,6 @@
+fragment pagesFaqListingFields on pagesFaqListing_Entry {
+  ...entryInterfaceFields
+  pageHero {
+    ...pageHeroFields
+  }
+}

@@ -1,0 +1,11 @@
+query GetStickyBarCta {
+  entry(slug: "sticky-bar-cta") {
+    ... on ctasStickyBar_Entry {
+      __typename
+      id
+      isEnabled
+      stickyBarRichTextContent
+      stickyBarRichTextContentSecondary
+    }
+  }
+}

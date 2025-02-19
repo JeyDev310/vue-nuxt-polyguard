@@ -1,0 +1,9 @@
+fragment imagerxFields on imagerx {
+  __typename
+  url
+  width
+  height
+  mimeType
+  size
+  extension
+}

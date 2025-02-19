@@ -1,0 +1,27 @@
+fragment pageSectionsProductListFields on pageSectionsProductList_Entry {
+  ...entryInterfaceFields
+  id
+  products {
+    ...productInterfaceFields
+    ... on simpleProduct_Product {
+      excerptText
+      productDescription
+      bigcommerceProduct {
+        ...bigcommerceProductFields
+      }
+      productFeaturedImage(limit: 1) {
+        ... on products_Asset {
+          __typename
+          title
+          alt
+          srcset: url @imagerSrcset(handle: "standard-card")
+          imageTransforms: imagerTransform(transform: "standard-card") {
+            ... on imagerx {
+              ...imagerxFields
+            }
+          }
+        }
+      }
+    }
+  }
+}

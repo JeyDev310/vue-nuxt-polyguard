@@ -1,0 +1,6 @@
+fragment pageSectionsFaqsFields on pageSectionsFaqs_Entry {
+  ...entryInterfaceFields
+  primaryText
+  secondaryText
+  removeTopPadding
+}

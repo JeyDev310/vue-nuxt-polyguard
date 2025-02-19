@@ -1,0 +1,276 @@
+<script setup lang="ts">
+import type { LocationQueryRaw } from 'vue-router'
+import {
+  ref,
+  computed,
+  useAsyncData,
+  useRoute,
+  watch,
+  navigateTo,
+} from '#imports'
+import type { BreadcrumbItem } from '#shared/types'
+
+import MainContainer from '~/components/layout/MainContainer.vue'
+import Paginator from '~/components/common/Paginator.vue'
+import ResourcesSearchBar from '~/components/resources/ResourcesSearchBar.vue'
+import Header from '~/components/layout/Header.vue'
+import Footer from '~/components/layout/Footer.vue'
+
+interface SearchParams {
+  term: string
+  cat: string
+  div: string
+}
+
+const route = useRoute()
+const queryPage = route.query.page
+const pageSize = 8
+
+const searchParams = ref<SearchParams>(getSearchParams())
+const currentPage = ref<number>(getCurrentPage())
+
+
+const hideBreadcrumbs = ref<boolean>(false)
+
+const { data: foundResources } = await useAsyncData(
+  `resource_index_found_resources_${currentPage.value}_${pageSize}_${searchParams.value.term}_${searchParams.value.div}_${searchParams.value.cat}`,
+  async () => await searchResources(),
+)
+
+const totalPosts = computed(() => foundResources.value?.entryCount || 0)
+const totalPages = computed(() => Math.ceil((totalPosts.value || 0) / pageSize))
+
+watch(
+  () => currentPage.value,
+  async () => {
+    const query = buildQueryStringParams()
+
+    await navigateTo({
+      path: route.path,
+      query,
+    })
+
+    foundResources.value = await searchResources()
+  },
+)
+
+watch(searchParams, async () => {
+  const query = buildQueryStringParams(true)
+  currentPage.value = 1
+
+  await navigateTo({
+    path: route.path,
+    query,
+  })
+
+  foundResources.value = await searchResources()
+})
+
+const breadcrumbs: Array<BreadcrumbItem> = [
+  {
+    name: 'Home',
+    href: '/',
+    current: false,
+  },
+  {
+    name: 'Resources',
+    href: '/resources',
+    current: true,
+  },
+]
+
+async function searchResources() {
+  const page = currentPage.value
+  const searchTerm = searchParams.value?.term
+  const resourceCategoriesSlugs = searchParams.value?.cat
+    ? [searchParams.value?.cat, 'all']
+    : undefined
+  const resourceDivisionsSlugs = searchParams.value?.div
+    ? [searchParams.value?.div, 'all']
+    : undefined
+
+  return await $fetch('/api/v1/resources', {
+    method: 'POST',
+    body: {
+      page,
+      pageSize,
+      searchTerm,
+      resourceCategoriesSlugs,
+      resourceDivisionsSlugs,
+    },
+  })
+}
+
+function buildQueryStringParams(toFirstPage = false): LocationQueryRaw {
+  const _query: LocationQueryRaw = {
+    ...route.query,
+    page: toFirstPage ? 1 : currentPage.value,
+  }
+
+  if (searchParams.value.term) {
+    _query.term = searchParams.value.term
+  } else {
+    delete _query.term
+  }
+
+  if (searchParams.value.div) {
+    _query.div = searchParams.value.div
+  } else {
+    delete _query.div
+  }
+
+  if (searchParams.value.cat) {
+    _query.cat = searchParams.value.cat
+  } else {
+    delete _query.cat
+  }
+
+  return _query
+}
+
+function getCurrentPage(): number {
+  if (!queryPage) return 1
+
+  const pageNumber = parseInt(queryPage.toString())
+  if (isNaN(pageNumber)) {
+    return 1
+  } else if (pageNumber < 1) {
+    return 1
+  } else {
+    return pageNumber
+  }
+}
+
+function getSearchParams(): SearchParams {
+  const searchTerm = Array.isArray(route.query.term)
+    ? route.query.term[0]
+    : route.query.term
+
+  const resourceCategoryTerm = Array.isArray(route.query.cat)
+    ? route.query.cat[0]
+    : route.query.cat
+
+  const resourceDivisionTerm = Array.isArray(route.query.div)
+    ? route.query.div[0]
+    : route.query.div
+
+  return {
+    term: searchTerm ?? '',
+    cat: resourceCategoryTerm ?? '',
+    div: resourceDivisionTerm ?? '',
+  }
+}
+</script>
+
+<template>
+  <div>
+    <Header
+      :breadcrumbs="breadcrumbs"
+      :hide-breadcrumbs="hideBreadcrumbs"
+    />
+    <main :class="mt-60">
+      <MainContainer class="min-h-screen">
+        <section class="generic-hero">
+          <div class="my-12 px-6">
+            <div class="mx-auto max-w-container">
+              <!-- H1 Heading and Copy -->
+              <div class="text-center">
+                <h1 class="text-4xl leading-tight md:text-5xl">Resources</h1>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section>
+          <ResourcesSearchBar v-model="searchParams" />
+        </section>
+
+        <section class="bg-white pt-16 lg:pt-24 xl:mx-40">
+          <MainContainer>
+            <div>
+              <div class="flex flex-col gap-7 lg:flex-row">
+                <div class="flex-1">
+                  <!-- Use grid-cols-1 for small screens and grid-cols-2 for larger screens -->
+                  <div
+                    class="grid grid-cols-1 gap-x-10 gap-y-10 md:grid-cols-2"
+                  >
+                    <div
+                      v-for="(item, index) in foundResources?.resources"
+                      :key="index"
+                      class="flex space-x-3 space-y-1.5 lg:mr-40"
+                    >
+                      <div>
+                        <figure class="grid justify-center">
+                          <NuxtImg
+                            src="/images/resources-download.svg"
+                            alt="Resource Download Icon"
+                            class="object-contain filter"
+                            width="109"
+                            height="140"
+                          />
+                        </figure>
+                      </div>
+                      <div
+                        class="flex flex-1 flex-col justify-center space-y-2"
+                      >
+                        <ul
+                          class="flex items-center font-heading text-xs font-semibold"
+                        >
+                          <li
+                            v-for="(
+                              rDivision, rdIndex
+                            ) in item.resourceDivisions"
+                            :key="rdIndex"
+                            class="flex items-center font-montserrat after:mx-2 after:block after:h-1 after:w-1 after:flex-none after:rounded-full after:bg-primary after:content-[''] last:after:hidden"
+                          >
+                            {{ rDivision.title }}
+                          </li>
+                        </ul>
+                        <div
+                          class="flex items-center font-heading text-sm font-medium"
+                        >
+                          {{ item.title }}
+                        </div>
+
+                        <div
+                          v-if="item.__typename === 'fileDownload_Entry'"
+                          class="mt-4 flex flex-wrap gap-x-2 gap-y-2 pt-2"
+                        >
+                          <NuxtLink
+                            v-for="(link, raIndex) in item.resourceAssets"
+                            :key="raIndex"
+                            :to="link.url || undefined"
+                            :title="
+                              'Download ' +
+                              link.extension +
+                              ' for ' +
+                              item.title
+                            "
+                            class="rounded-3xl bg-[#60b8b8] px-6 py-2 text-sm font-medium text-white"
+                          >
+                            <div class="text-xs font-medium leading-tight">
+                              {{ link.extension }}
+                            </div>
+                          </NuxtLink>
+                        </div>
+                        <div v-else-if="item.__typename === 'pageLink_Entry'">
+                          pageLink_Entry
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </MainContainer>
+        </section>
+
+        <!-- Paginator -->
+        <div class="my-24 flex justify-center">
+          <Paginator v-model="currentPage" :total-pages="totalPages" />
+        </div>
+        <!-- End Paginator -->
+      </MainContainer>
+    </main>
+    <Footer />
+  </div>
+</template>

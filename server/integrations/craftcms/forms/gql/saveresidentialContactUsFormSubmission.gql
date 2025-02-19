@@ -1,0 +1,33 @@
+mutation saveresidentialContactUsSubmission(
+  $yourName: residentialContactUs_yourName_FormieNameInput
+  $emailAddress: String
+  $phoneNumber1: String
+  $message: String
+  $companyName: String
+  $city: String
+  $state: String
+  $wallConstructionType: [String]
+) {
+  save_residentialContactUs_Submission(
+    phoneNumber1: $phoneNumber1
+    emailAddress: $emailAddress
+    message: $message
+    city: $city
+    state: $state
+    yourName: $yourName
+    companyName: $companyName
+    wallConstructionType: $wallConstructionType
+  ) {
+    yourName {
+      firstName
+      lastName
+    }
+    emailAddress
+    phoneNumber1
+    message
+    city
+    state
+    wallConstructionType
+    companyName
+  }
+}

@@ -1,0 +1,13 @@
+fragment pagesLandingPageFields on pagesLandingPage_Entry {
+  ...entryInterfaceFields
+  doNotShowProductListingPageInBreadcrumbs
+  doNotUseDefaultHeader
+
+  pageHero {
+    ...pageHeroFields
+  }
+  standardContentBuilder {
+    ...entryInterfaceFields
+    ...pageSectionsProductListFields
+  }
+}

@@ -1,0 +1,13 @@
+fragment pageSectionsFormieFormFields on pageSectionsFormieForm_Entry {
+  ...entryInterfaceFields
+  form {
+    __typename
+    csrfToken {
+      name
+      value
+    }
+    rows {
+      ...rowTypeFrag
+    }
+  }
+}

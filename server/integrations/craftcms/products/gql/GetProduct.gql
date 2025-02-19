@@ -1,0 +1,5 @@
+query GetProduct($uri: String) {
+  product(uri: [$uri]) {
+    ...productInterfaceFields
+  }
+}

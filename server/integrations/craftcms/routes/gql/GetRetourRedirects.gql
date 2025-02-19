@@ -1,0 +1,15 @@
+query GetRetourRedirects {
+  retourRedirects {
+    ... on RetourType {
+      id
+      uid
+      redirectSrcUrlParsed
+      redirectSrcUrl
+      redirectSrcMatch
+      redirectMatchType
+      redirectHttpCode
+      redirectDestUrl
+      enabled
+    }
+  }
+}

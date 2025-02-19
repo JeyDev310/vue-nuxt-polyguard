@@ -1,0 +1,595 @@
+<script lang="ts" setup>
+import { withLeadingSlash } from 'ufo'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Navigation, Thumbs } from 'swiper/modules'
+import SwiperCore from 'swiper'
+import 'swiper/css'
+import 'swiper/css/thumbs'
+import { computed, ref, navigateTo, useFetch } from '#imports'
+import type { Media_Asset, Products_Asset } from '~~/server/codegen'
+
+import MainContainer from '~/components/layout/MainContainer.vue'
+import ProductInfo from '~/components/products/ProductInfo.vue'
+
+SwiperCore.use([Navigation, Thumbs])
+interface Props {
+  productUri: string
+}
+
+const props = defineProps<Props>()
+
+const { data: product } = await useFetch('/api/v1/product/simple-product', {
+  method: 'POST',
+  body: {
+    uri: props.productUri,
+  },
+})
+
+if (!product.value) {
+  await navigateTo('/404', { redirectCode: 404 })
+}
+
+const thumbsSwiper = ref<SwiperCore | null>(null)
+
+const hasCompanionProducts = computed(
+  () => (product.value?.commerceCompanionProducts || []).length > 0,
+)
+
+const allMedia = computed(() => {
+  const featuredImage = product.value?.productFeaturedImage || []
+  const sliderMedia = product.value?.productSliderMedia || []
+  return [...featuredImage, ...sliderMedia]
+})
+
+function onThumbsSwiper(swiper: SwiperCore) {
+  thumbsSwiper.value = swiper
+}
+
+function resourceClassesByFileType(fileType: string) {
+  switch (fileType.toUpperCase()) {
+    case 'PDF':
+      return 'bg-[#60b8b8] py-2 px-8 rounded-3xl font-medium text-white text-sm'
+    case 'DWG':
+      return 'bg-[#348ef2] py-2 px-8 rounded-3xl font-medium text-white text-sm'
+    default:
+      return 'bg-[#60b8b8] py-2 px-8 rounded-3xl font-medium text-white text-sm'
+  }
+}
+</script>
+
+<template>
+  <div>
+    <!-- Product Overview -->
+    <section class="my-12 bg-white">
+      <MainContainer>
+        <div class="flex flex-col">
+          <div class="relative my-10 space-y-20">
+            <!-- H1 Heading and Copy -->
+            <h1 class="text-center text-4xl leading-tight md:text-5xl">
+              {{ product?.title }}
+            </h1>
+
+            <div
+              class="flex flex-col justify-between gap-x-5 gap-y-32 lg:flex-row lg:gap-x-8 lg:gap-y-10"
+            >
+              <!-- Head Title -->
+              <div class="lg:order-2 lg:w-5/12 lg:max-w-[28.4375rem]">
+                <div class="lg:mb-10 lg:mt-16">
+                  <div class="prose prose-gray max-w-none">
+                    <div v-html="product?.productDescription" />
+                    <NuxtLink
+                      v-if="product?.productCtaButton[0]?.linkUri"
+                      class="inline-flex min-h-10 cursor-pointer items-center rounded-3xl border-2 border-primary bg-primary px-8 py-2 align-middle font-heading text-xs font-medium leading-tight text-white no-underline transition focus:bg-primary-dark lg:hover:border-primary-dark lg:hover:bg-primary-dark"
+                      :to="
+                        product.productCtaButton[0]?.linkUri
+                          ? withLeadingSlash(
+                              product.productCtaButton[0].linkUri,
+                            )
+                          : undefined
+                      "
+                      >{{ product.productCtaButton[0]?.linkText }}
+                    </NuxtLink>
+                  </div>
+
+                  <div v-if="hasCompanionProducts" class="mt-6 pb-6">
+                    <!-- NOTE: Added `more-link--nohover` since this is not the actual link -->
+                    <NuxtLink
+                      to="#companion-products"
+                      class="flex text-sm text-[#348ef2]"
+                    >
+                      <div>See Companion Products</div>
+                      <svg
+                        width="14"
+                        height="9"
+                        class="ml-3 mt-1.5"
+                        viewBox="0 0 14 9"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M9.84314575,0 L13.767767,3.9375 C14.077411,4.24816017 14.077411,4.75183983 13.767767,5.0625 L9.84314575,9 L8.72182541,7.875 L11.292,5.295 L0,5.29549513 L0,3.70450487 L11.292,3.704 L8.72182541,1.125 L9.84314575,0 Z"
+                          transform="translate(-617.000000, -2504.000000) translate(541.000000, 2144.000000) translate(0.000000, 357.000000) translate(76.000000, 3.000000)"
+                          fill="#111214"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </NuxtLink>
+                  </div>
+                </div>
+
+                <NuxtLink
+                  v-if="!product?.returnable"
+                  to="/return-policy"
+                  class="item-center mt-4 flex justify-center gap-2 rounded-md border-2 border-orange-400 px-4 py-4 text-orange-400"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="h-6 w-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"
+                    />
+                  </svg>
+                  <span class="leading-6">This item is non-returnable</span>
+                </NuxtLink>
+
+                <ProductInfo
+                  :bigcommerce-product="product?.bigcommerceProduct"
+                />
+              </div>
+              <!-- END: Head Title -->
+              <!-- Slider Gallery -->
+              <div class="lg:w-7/12 lg:max-w-[40.75rem]">
+                <div class="relative flex flex-col space-y-3 sm:space-y-6">
+                  <div class="block w-full flex-1">
+                    <div class="relative">
+                      <!-- Navigation Controls -->
+                      <div class="absolute inset-0 flex h-full w-full">
+                        <button
+                          type="button"
+                          aria-label="Previous"
+                          class="swiper-button-prev navigation-control slider-product-overview__control slider-product-overview__control-prev text-gray-900 hover:bg-white"
+                        >
+                          <svg
+                            class="navigation-control__arrow rotate-180 transform fill-current"
+                            width="18"
+                            height="12"
+                            viewBox="0 0 18 12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M19.4142136,10.3431458 L24.363961,15.2928932 C24.7544853,15.6834175 24.7544853,16.3165825 24.363961,16.7071068 L19.4142136,21.6568542 L18,20.2426407 L21.242,16.9991458 L7,17 L7,15 L21.24,14.9991458 L18,11.7573593 L19.4142136,10.3431458 Z"
+                              transform="translate(-730.000000, -614.000000) translate(723.000000, 604.000000)"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          type="button"
+                          aria-label="Next"
+                          class="swiper-button-next navigation-control slider-product-overview__control slider-product-overview__control-next text-gray-900 hover:bg-white"
+                        >
+                          <svg
+                            class="navigation-control__arrow fill-current"
+                            width="18"
+                            height="12"
+                            viewBox="0 0 18 12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M19.4142136,10.3431458 L24.363961,15.2928932 C24.7544853,15.6834175 24.7544853,16.3165825 24.363961,16.7071068 L19.4142136,21.6568542 L18,20.2426407 L21.242,16.9991458 L7,17 L7,15 L21.24,14.9991458 L18,11.7573593 L19.4142136,10.3431458 Z"
+                              transform="translate(-730.000000, -614.000000) translate(723.000000, 604.000000)"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+
+                      <!-- Main Swiper -->
+                      <swiper
+                        :modules="[Navigation, Thumbs]"
+                        :slides-per-view="1"
+                        :space-between="30"
+                        :threshold="20"
+                        :centered-slides="true"
+                        :centered-slides-bounds="true"
+                        :loop="false"
+                        :navigation="{
+                          prevEl: '.swiper-button-prev',
+                          nextEl: '.swiper-button-next',
+                        }"
+                        :thumbs="{ swiper: thumbsSwiper }"
+                        class="relative overflow-hidden"
+                      >
+                        <swiper-slide
+                          v-for="(asset, index) in allMedia"
+                          :key="index"
+                        >
+                          <div
+                            class="relative flex items-center justify-center"
+                          >
+                            <picture class="aspect-video slide-image w-full">
+                              <NuxtImg
+                                class="relative h-full w-full object-cover"
+                                :srcset="(asset as Media_Asset)?.srcset"
+                                :alt="
+                                  (asset as Products_Asset)?.alt || undefined
+                                "
+                                loading="lazy"
+                              />
+                            </picture>
+                          </div>
+                        </swiper-slide>
+                      </swiper>
+                    </div>
+                  </div>
+
+                  <!-- Thumbnails Swiper -->
+                  <div class="relative flex-none">
+                    <swiper
+                      :modules="[Thumbs]"
+                      :space-between="30"
+                      :threshold="20"
+                      :centered-slides="true"
+                      :centered-slides-bounds="true"
+                      :loop="false"
+                      :watch-slides-progress="true"
+                      class="relative overflow-hidden"
+                      :breakpoints="{
+                        // When window width is >= 640px
+                        640: {
+                          slidesPerView: 5,
+                        },
+                        // When window width is < 640px
+                        0: {
+                          slidesPerView: 3,
+                        },
+                      }"
+                      @swiper="onThumbsSwiper"
+                    >
+                      <swiper-slide
+                        v-for="(asset, index) in allMedia"
+                        :key="index"
+                        class="slider-product-overview__thumb"
+                      >
+                        <div
+                          class="aspect-video relative flex w-full cursor-pointer items-center justify-center transition"
+                        >
+                          <NuxtImg
+                            class="relative h-24 w-24 object-cover transition"
+                            :srcset="
+                              (asset as Media_Asset)?.srcset || undefined
+                            "
+                            alt="thumbnail preview"
+                            loading="lazy"
+                          />
+                        </div>
+                      </swiper-slide>
+                    </swiper>
+                  </div>
+                </div>
+              </div>
+              <!-- END: Slider Gallery -->
+            </div>
+          </div>
+        </div>
+      </MainContainer>
+    </section>
+    <!-- End Product Overview -->
+
+    <!-- Features & Benefits -->
+    <section class="relative bg-primary">
+      <div
+        class="absolute left-0 top-0 h-40 w-full before:absolute before:inset-0 before:z-10 before:h-full before:w-full before:bg-gradient-to-t before:from-primary after:absolute after:inset-0 after:m-auto after:h-[calc(100%-theme(spacing.4))] after:w-[calc(100%-theme(spacing.5))] after:bg-pattern-1 after:opacity-20"
+      />
+      <MainContainer>
+        <div class="relative">
+          <div class="relative z-10 px-6 py-24">
+            <div class="max-w-container xl:mx-24">
+              <div class="grid gap-20">
+                <div>
+                  <!-- Fancy Prose -->
+                  <div class="text-center text-white">
+                    <h2 class="text-center text-4xl">
+                      <strong>Features</strong> &amp; Benefits
+                    </h2>
+                  </div>
+                  <!-- End  -->
+                </div>
+                <div>
+                  <div
+                    class="grid gap-x-10 gap-y-10 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
+                  >
+                    <div
+                      v-for="(item, index) in product?.productFeaturesBenefits"
+                      :key="index"
+                      class="mx-auto max-w-72 space-y-4 text-center text-base tracking-wide text-white"
+                    >
+                      <div class="flex justify-center">
+                        <NuxtImg
+                          :src="item.icon[0]?.url || undefined"
+                          class="h-12 w-12"
+                          width="48"
+                          height="48"
+                          :alt="item.icon[0]?.alt || undefined"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div class="space-y-2">
+                        <div v-if="item.primaryText" class="font-bold">
+                          {{ item.primaryText }}
+                        </div>
+
+                        <div v-if="item.secondaryText" class="leading-7">
+                          {{ item.secondaryText }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </MainContainer>
+    </section>
+    <!-- End Features & Benefits -->
+
+    <!-- Product Resources -->
+    <section class="bg-white py-16 lg:py-24">
+      <MainContainer>
+        <div class="flex xl:mx-36">
+          <div class="w-full lg:w-4/12">
+            <div class="grid gap-7">
+              <div>
+                <!-- Fancy Prose -->
+                <div class="mx-auto mb-8 ml-2 text-2xl font-medium">
+                  <h4><span class="font-bold">Product</span> Resources</h4>
+                </div>
+                <!-- End  -->
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-7 lg:flex-row">
+            <div class="flex-1">
+              <div
+                class="grid grid-cols-2 gap-x-10 gap-y-10 md:grid-cols-3 xl:grid-cols-4"
+              >
+                <div
+                  v-for="(
+                    item, index
+                  ) in product?.featuredProductResources.filter(
+                    (p) => p.__typename === 'resourcesFileDownload_Entry',
+                  )"
+                  :key="index"
+                  class="space-y-2"
+                >
+                  <div class="grid justify-center">
+                    <NuxtImg
+                      src="/images/resources-download.svg"
+                      class="object-contain filter"
+                      width="173"
+                      height="225"
+                      loading="lazy"
+                      alt="Resource Download Icon"
+                    />
+                  </div>
+
+                  <div class="text-center text-sm font-medium">
+                    {{ item.title }}
+                  </div>
+                  <div class="flex justify-center gap-x-2">
+                    <NuxtLink
+                      v-for="(link, raIndex) in item.resourceAssets"
+                      :key="raIndex"
+                      :to="link.url || undefined"
+                      :title="
+                        'Download ' + link.extension + ' for ' + item.title
+                      "
+                      class="inline-flex items-center space-x-2 rounded-xl bg-[#191919] px-3 py-1 text-white"
+                    >
+                      <div class="text-xs font-medium leading-tight">
+                        {{ link.extension }}
+                      </div>
+                      <svg
+                        width="10"
+                        height="13"
+                        class="fill-current"
+                        viewBox="0 0 10 13"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M44,2.84314575 L47.9246212,6.78064575 C48.2342653,7.09130592 48.2342653,7.59498558 47.9246212,7.90564575 L44,11.8431458 L42.8786797,10.7181458 L45.4491458,8.13814575 L35.8431458,8.13864088 L35.8431458,6.54765062 L45.4481458,6.54714575 L42.8786797,3.96814575 L44,2.84314575 Z"
+                          transform="translate(-624.000000, -2126.000000) translate(0.000000, 1792.000000) translate(542.000000, 80.000000) translate(39.000000, 249.000000) translate(6.000000, 4.000000) translate(42.000000, 7.343146) rotate(-270.000000) translate(-42.000000, -7.343146)"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </NuxtLink>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </MainContainer>
+    </section>
+    <!-- End Product Resources -->
+
+    <!-- Product Details -->
+    <section class="my-16 bg-white lg:my-24">
+      <MainContainer>
+        <div class="space-y-12">
+          <div class="flex flex-col items-center justify-center xl:mx-28">
+            <div class="w-full xl:mx-24 xl:w-8/12">
+              <h2 class="mb-8 ml-2 text-2xl font-bold">Product Details</h2>
+              <div class="space-y-16">
+                <div>
+                  <div class="space-y-3">
+                    <div>
+                      <div class="grid gap-2">
+                        <div class="space-y-3">
+                          <div
+                            v-for="(
+                              productDetail, pdIdx
+                            ) in product?.productDetails.filter(
+                              (p) =>
+                                p.__typename ===
+                                'productDetailsResources_Entry',
+                            )"
+                            :key="pdIdx"
+                          >
+                            <div
+                              v-for="(
+                                featuredResource, frIdx
+                              ) in productDetail.featuredResources.filter(
+                                (p) =>
+                                  p.__typename ===
+                                  'resourcesFileDownload_Entry',
+                              )"
+                              :key="frIdx"
+                              class="grid gap-4 rounded-md bg-[#f9f9f9] py-5 pl-5 pr-5 sm:flex sm:py-3 sm:pl-8 sm:pr-3"
+                            >
+                              <div class="flex-1 items-center sm:flex">
+                                <div
+                                  class="text-center text-sm text-black/90 sm:text-left"
+                                >
+                                  {{ featuredResource.title }}
+                                </div>
+                              </div>
+                              <div class="flex-shrink">
+                                <div
+                                  class="flex flex-wrap items-center justify-center gap-4"
+                                >
+                                  <NuxtLink
+                                    v-for="(
+                                      file, fileIndex
+                                    ) in featuredResource.resourceAssets.filter(
+                                      (p) => p.__typename === 'resources_Asset',
+                                    )"
+                                    :key="fileIndex"
+                                    :download="file.filename"
+                                    target="_blank"
+                                    :to="file.url || undefined"
+                                    :title="file.title"
+                                    :class="
+                                      resourceClassesByFileType(file.extension)
+                                    "
+                                  >
+                                    <h6>{{ file.extension }}</h6>
+                                  </NuxtLink>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </MainContainer>
+    </section>
+    <!-- End Product Details -->
+
+    <!-- Companion Products -->
+    <section
+      v-if="hasCompanionProducts"
+      id="companion-products"
+      class="bg-gray-50 py-24"
+    >
+      <MainContainer>
+        <div class="xl:mx-36">
+          <div class="grid gap-16 lg:gap-20">
+            <div>
+              <!-- Fancy Prose -->
+              <div class="text-xl xl:mx-40">
+                <h3 class="text-center">
+                  <span class="font-bold">Companion</span> Products
+                </h3>
+              </div>
+              <!-- End  -->
+            </div>
+            <div>
+              <div class="grid gap-x-10 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
+                <div
+                  v-for="(item, index) in product?.commerceCompanionProducts"
+                  :key="index"
+                  class="flex space-x-3 md:space-x-5"
+                >
+                  <div class="flex-none">
+                    <NuxtLink
+                      :to="item.uri ? withLeadingSlash(item.uri) : undefined"
+                    >
+                      <NuxtPicture
+                        :sources="item.productFeaturedImage[0]?.srcset"
+                        :src="
+                          item.productFeaturedImage[0]?.imageTransforms[0]
+                            ?.url || undefined
+                        "
+                        :alt="
+                          item.productFeaturedImage[0]?.alt ||
+                          item.title ||
+                          undefined
+                        "
+                        class="h-20 w-20"
+                        width="80"
+                        height="80"
+                        loading="lazy"
+                      />
+                    </NuxtLink>
+                  </div>
+                  <div class="space-y-1 pt-3">
+                    <NuxtLink
+                      :to="item.uri ? withLeadingSlash(item.uri) : undefined"
+                    >
+                      <div class="font-bold leading-4">
+                        {{ item.title }}
+                      </div>
+                    </NuxtLink>
+                    <div class="text-xs leading-4">
+                      {{ item.excerptText }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </MainContainer>
+    </section>
+    <!-- End Companion Products -->
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.slider-product-overview__thumb {
+  width: auto;
+}
+
+.navigation-control {
+  @apply absolute top-1/2 z-10 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 transition;
+}
+
+.slider-product-overview__control-prev {
+  @apply left-10;
+}
+
+.slider-product-overview__control-next {
+  @apply right-10;
+}
+:global(.swiper-slide-thumb-active.slider-product-overview__thumb) {
+  @apply border-2 border-custom-blue;
+}
+</style>

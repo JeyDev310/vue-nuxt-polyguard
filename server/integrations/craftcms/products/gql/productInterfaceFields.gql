@@ -1,0 +1,38 @@
+fragment productInterfaceFields on ProductInterface {
+  __typename
+  dateCreated
+  dateUpdated
+  defaultHeight
+  defaultLength
+  defaultPrice
+  defaultPriceAsCurrency
+  defaultSku
+  defaultWeight
+  defaultWidth
+  enabled
+  id
+  language
+  productTypeHandle
+  productTypeId
+  siteHandle
+  siteId
+  siteSettingsId
+  status
+  title
+  trashed
+  uid
+  uri
+  defaultVariant {
+    ... on VariantInterface {
+      ...variantInterfaceFields
+    }
+  }
+  variants {
+    ... on VariantInterface {
+      ...variantInterfaceFields
+    }
+  }
+  seomatic(asArray: true) {
+    ...seomaticFields
+  }
+}

@@ -1,0 +1,9 @@
+fragment fieldAgreeFrag on Field_Agree {
+  id
+  label
+  checkedValue
+  descriptionHtml
+  displayName
+  placeholder
+  required
+}

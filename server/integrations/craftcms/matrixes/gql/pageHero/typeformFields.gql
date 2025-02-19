@@ -1,0 +1,4 @@
+fragment pageHeroTypeformFields on pageHeroTypeform_Entry {
+  ...entryInterfaceFields
+  typeformCode
+}

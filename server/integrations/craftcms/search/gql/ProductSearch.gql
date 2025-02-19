@@ -1,0 +1,44 @@
+query ProductSearch(
+  $searchText: String = null
+  $productCategoriesIds: [QueryArgument] = null
+  $productDivisionsIds: [QueryArgument] = null
+) {
+  productCount(
+    search: $searchText
+    relatedToEntries: [
+      { section: "productCategories", id: $productCategoriesIds }
+      { section: "productDivisions", id: $productDivisionsIds }
+    ]
+  )
+  products(
+    search: $searchText
+    relatedToEntries: [
+      { section: "productCategories", id: $productCategoriesIds }
+      { section: "productDivisions", id: $productDivisionsIds }
+    ]
+    orderBy: "title ASC"
+  ) {
+    ...productInterfaceFields
+
+    ... on simpleProduct_Product {
+      excerptText
+      productDescription
+      bigcommerceProduct {
+        ...bigcommerceProductFields
+      }
+      productFeaturedImage(limit: 1) {
+        ... on products_Asset {
+          __typename
+          title
+          alt
+          srcset: url @imagerSrcset(handle: "auto")
+          imageTransforms: imagerTransform(transform: "standard-card") {
+            ... on imagerx {
+              ...imagerxFields
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+query GetBlogCategory($uri: String) {
+  entry(section: "blogCategories", uri: [$uri]) {
+    ...blogCategoriesDefaultFields
+  }
+}

@@ -1,0 +1,21 @@
+mutation savehighwayContactUsSubmission(
+  $yourName: highwayContactUs_yourName_FormieNameInput
+  $emailAddress: String
+  $phoneNumber: String
+  $message: String
+) {
+  save_highwayContactUs_Submission(
+    phoneNumber: $phoneNumber
+    emailAddress: $emailAddress
+    message: $message
+    yourName: $yourName
+  ) {
+    yourName {
+      firstName
+      lastName
+    }
+    emailAddress
+    phoneNumber
+    message
+  }
+}

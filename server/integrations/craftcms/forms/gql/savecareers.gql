@@ -1,0 +1,24 @@
+mutation savecareersSubmission(
+  $yourName: String
+  $emailAddress: String
+  $phoneNumber: String
+  $message: String
+  $resume: FileUploadInput
+) {
+  save_careers_Submission(
+    phoneNumber: $phoneNumber
+    emailAddress: $emailAddress
+    resume: [$resume]
+    message: $message
+    yourName: $yourName
+  ) {
+    yourName
+    emailAddress
+    phoneNumber
+    resume {
+      filename
+      url
+    }
+    message
+  }
+}

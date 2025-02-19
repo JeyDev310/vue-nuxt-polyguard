@@ -1,0 +1,5 @@
+mutation saveFormieAsset($fileName: String, $fileData: String) {
+  save_formsUploads_Asset(_file: { filename: $fileName, fileData: $fileData }) {
+    id
+  }
+}

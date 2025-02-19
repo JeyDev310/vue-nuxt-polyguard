@@ -1,0 +1,26 @@
+fragment pageSectionsCtasEdgeImageFields on pageSectionsCtasEdgeImage_Entry {
+  ...entryInterfaceFields
+  primaryText
+  secondaryText
+  url
+  image {
+    ... on media_Asset {
+      __typename
+      id
+      url: url @imagerTransform(width: 300)
+      # Transform for base image
+      transform_300: url @imagerTransform(width: 300)
+      # Transform for 3x resolution
+      transform_900: url @imagerTransform(width: 900)
+      srcset: url @imagerTransform(handle: "auto")
+      alt
+    }
+  }
+  primaryLink {
+    link
+    linkText
+    url
+    target
+    linkUri
+  }
+}

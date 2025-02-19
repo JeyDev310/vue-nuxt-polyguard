@@ -1,0 +1,109 @@
+<script setup lang="ts">
+import { withLeadingSlash, withoutTrailingSlash } from 'ufo'
+import { computed, useFetch } from '#imports'
+import type { LatestNewsFieldsFragment } from '~~/server/codegen'
+
+import BlogPostCard from '~/components/blog/BlogPostCard.vue'
+
+interface Props {
+  block?: LatestNewsFieldsFragment | null
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  block: undefined,
+})
+
+const { data: paginatedBlogPosts } = await useFetch('/api/v1/blog/posts', {
+  method: 'POST',
+  body: {
+    page: 1,
+  },
+})
+
+const blogPostsCards = computed(() => {
+  return (paginatedBlogPosts.value?.blogPosts || []).map((blogPost) => {
+    return {
+      title: blogPost.title || '',
+      category: blogPost.blogCategories[0]?.title || '',
+      categoryLink: withLeadingSlash(
+        withoutTrailingSlash(blogPost.blogCategories[0]?.uri || ''),
+      ),
+      description: blogPost.excerptText || '',
+      link: withLeadingSlash(withoutTrailingSlash(blogPost.uri || '')),
+      image: blogPost.blogFeaturedImage[0]?.url || '',
+      authorImage: '',
+      authorName: '',
+      date: '',
+    }
+  })
+})
+
+const primaryLinkUri = computed(() => {
+  return withLeadingSlash(
+    props.block?.primaryLink[0]?.linkUri ??
+      props.block?.primaryLink[0]?.url ??
+      '',
+  )
+})
+
+const primaryLinkText = computed(() => {
+  return props.block?.primaryLink[0]?.linkText ?? ''
+})
+</script>
+
+<template>
+  <!-- <div>
+    <div class="relative">{{ props.block?.typeHandle }}</div>
+    <pre>{{ props.block }}</pre>
+  </div> -->
+  <section>
+    <div class="relative z-10 px-6 py-16 lg:py-24">
+      <div class="mx-auto max-w-container">
+        <div class="flex flex-col gap-7 lg:flex-row">
+          <!-- Content Side -->
+          <div class="w-full lg:w-4/12">
+            <div class="grid gap-7">
+              <div>
+                <div class="prose--fancy prose mx-auto">
+                  <h4
+                    v-if="props.block?.primaryText"
+                    v-html="props.block?.primaryText"
+                  />
+                  <p
+                    v-if="props.block?.secondaryText"
+                    v-html="props.block?.secondaryText"
+                  />
+                </div>
+              </div>
+              <div v-if="primaryLinkUri">
+                <NuxtLink
+                  :to="primaryLinkUri"
+                  class="inline-flex min-h-10 cursor-pointer items-center rounded-3xl border-2 border-secondary bg-secondary px-8 py-2 align-middle font-heading text-xs font-medium leading-tight text-white transition focus:bg-secondary-dark lg:hover:border-secondary-dark lg:hover:bg-secondary-dark"
+                >
+                  {{ primaryLinkText }}
+                </NuxtLink>
+              </div>
+            </div>
+          </div>
+
+          <!-- Posts Side -->
+          <div class="flex-1">
+            <div class="grid gap-x-9 gap-y-16 sm:grid-cols-2">
+              <BlogPostCard
+                v-for="post in blogPostsCards.slice(0, 2)"
+                :key="post.title"
+                :title="post.title"
+                :excerpt="post.description"
+                :url="post.link"
+                :category="{
+                  title: post.category,
+                  url: post.categoryLink,
+                }"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>

@@ -1,0 +1,20 @@
+fragment fieldInterfaceFrag on FieldInterface {
+  typeName
+  __typename
+  label
+  handle
+  type
+  typeName
+  cssClasses
+  displayName
+  labelPosition
+  placeholder
+  required
+  instructions
+  handle
+  errorMessage
+  visibility
+  enableConditions
+  conditions
+  enabled
+}

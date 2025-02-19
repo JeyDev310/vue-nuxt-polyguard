@@ -1,0 +1,13 @@
+query GetProductCategory($uri: String) {
+  entry(section: "productCategories", uri: [$uri]) {
+    ... on EntryInterface {
+      ...entryInterfaceFields
+    }
+    ... on productCategoriesCatalogPage_Entry {
+      ...productCategoriesCatalogPageFields
+    }
+    ... on productCategoriesCatalogListing_Entry {
+      ...productCategoriesCatalogListingFields
+    }
+  }
+}

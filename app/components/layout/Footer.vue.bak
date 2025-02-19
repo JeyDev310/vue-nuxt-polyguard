@@ -1,0 +1,143 @@
+<script setup lang="ts">
+import { useAsyncData } from '#imports'
+
+import MainContainer from '~/components/layout/MainContainer.vue'
+import InstagramIcon from '~/components/common/icons/Instagram.vue'
+import FacebookIcon from '~/components/common/icons/Facebook.vue'
+import LinkedinIcon from '~/components/common/icons/Linkedin.vue'
+import TwitterIcon from '~/components/common/icons/Twitter.vue'
+import YoutubeIcon from '~/components/common/icons/Youtube.vue'
+
+const { data: footerMenus } = await useAsyncData(`footerMenus`, async () => {
+  const [footerLinks, copyrightLinksLeft, copyrightLinksRight] =
+    await Promise.all([
+      $fetch('/api/v1/menus/footer-links'),
+      $fetch('/api/v1/menus/copyright-links-left'),
+      $fetch('/api/v1/menus/copyright-links-right'),
+    ])
+
+  return {
+    footerLinks,
+    copyrightLinksLeft,
+    copyrightLinksRight,
+  }
+})
+
+const socialLinks = [
+  {
+    name: 'Facebook',
+    link: 'https://www.facebook.com/polyguardproducts/',
+    icon: FacebookIcon,
+  },
+  {
+    name: 'Instagram',
+    link: 'https://www.instagram.com/polyguardproducts/?hl=en',
+    icon: InstagramIcon,
+  },
+  {
+    name: 'LinkedIn',
+    link: 'https://www.linkedin.com/company/polyguard-products/',
+    icon: LinkedinIcon,
+  },
+  {
+    name: 'X (formerly twitter)',
+    link: 'https://twitter.com/polyguardusa',
+    icon: TwitterIcon,
+  },
+  {
+    name: 'Youtube',
+    link: 'https://www.youtube.com/@polyguardproducts',
+    icon: YoutubeIcon,
+  },
+]
+</script>
+
+<template>
+  <footer class="bg-black" aria-labelledby="footer-heading">
+    <MainContainer>
+      <div class="pb-10 pt-10 lg:pb-3 lg:pt-28">
+        <h2 id="footer-heading" class="sr-only">Footer</h2>
+        <div class="mx-auto grid gap-14 lg:gap-28">
+          <div class="flex-col items-center justify-around xl:flex xl:flex-row">
+            <div
+              class="mb-7 flex flex-col items-center justify-between gap-7 xl:mb-0 xl:flex-row"
+            >
+              <NuxtImg
+                class="h-[33px]"
+                src="/images/logo-white.png"
+                alt="Company name"
+              />
+              <ul class="flex flex-row flex-wrap justify-center space-x-8">
+                <li
+                  v-for="(item, index) in footerMenus?.footerLinks || []"
+                  :key="index"
+                >
+                  <NuxtLink
+                    :to="item.nodeUri"
+                    :target="item.newWindow ? '_blank' : '_self'"
+                    class="text-left font-inter text-[9.5px] font-medium uppercase leading-5 text-white hover:text-[#348ef2]"
+                    >{{ item.title }}</NuxtLink
+                  >
+                </li>
+              </ul>
+            </div>
+            <div class="flex justify-around xl:justify-between">
+              <div class="grid auto-cols-min grid-flow-col gap-6">
+                <NuxtLink
+                  v-for="(item, index) in socialLinks"
+                  :key="index"
+                  :to="item.link"
+                  class="text-white"
+                >
+                  <span class="sr-only">{{ item.name }}</span>
+                  <Component
+                    :is="item.icon"
+                    class="h-[30px] w-[30px]"
+                    aria-hidden="true"
+                  />
+                </NuxtLink>
+              </div>
+            </div>
+          </div>
+          <div
+            class="mx-4 flex-col items-center justify-between gap-7 border-t border-gray-900/10 text-left font-inter text-xs font-normal leading-5 sm:flex lg:flex-row lg:justify-normal lg:gap-0"
+          >
+            <div
+              class="order-1 mb-1 flex flex-col gap-y-2 text-[#858585] sm:flex-row sm:gap-y-0 sm:space-x-10"
+            >
+              <p class="flex justify-center sm:flex-none">
+                &copy; {{ new Date().getFullYear() }} Polyguard. All rights
+                reserved.
+              </p>
+              <NuxtLink
+                v-for="(item, index) in footerMenus?.copyrightLinksLeft || []"
+                :key="index"
+                :to="item.nodeUri"
+                :target="item.newWindow ? '_blank' : '_self'"
+                class="flex justify-center hover:text-white hover:underline sm:flex-none"
+                >{{ item.title }}</NuxtLink
+              >
+            </div>
+            <div
+              class="flex flex-col space-y-1 sm:order-2 sm:flex-row sm:space-x-6 sm:space-y-0 lg:ml-auto"
+            >
+              <NuxtLink
+                v-for="(item, index) in footerMenus?.copyrightLinksRight || []"
+                :key="index"
+                :to="item.nodeUri"
+                :target="item.newWindow ? '_blank' : '_self'"
+                class="flex justify-center text-[#858585] sm:flex-none"
+              >
+                <div
+                  class="text-left font-inter text-xs font-normal leading-5 text-[#858585] hover:text-white hover:underline"
+                >
+                  {{ item.title }}
+                </div>
+              </NuxtLink>
+            </div>
+          </div>
+        </div>
+      </div>
+    </MainContainer>
+  </footer>
+</template>

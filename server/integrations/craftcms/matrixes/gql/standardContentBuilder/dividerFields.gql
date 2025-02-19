@@ -1,0 +1,3 @@
+fragment pageSectionsDividerFields on pageSectionsDivider_Entry {
+  ...entryInterfaceFields
+}

@@ -1,0 +1,21 @@
+mutation savemechanicalContactUsSubmission(
+  $yourName: mechanicalContactUs_yourName_FormieNameInput
+  $emailAddress: String
+  $phoneNumber: String
+  $message: String
+) {
+  save_mechanicalContactUs_Submission(
+    phoneNumber: $phoneNumber
+    emailAddress: $emailAddress
+    message: $message
+    yourName: $yourName
+  ) {
+    yourName {
+      firstName
+      lastName
+    }
+    emailAddress
+    phoneNumber
+    message
+  }
+}

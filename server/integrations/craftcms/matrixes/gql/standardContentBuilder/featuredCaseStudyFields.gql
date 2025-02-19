@@ -1,0 +1,4 @@
+fragment pageSectionsFeaturedCaseStudyFields on pageSectionsFeaturedCaseStudy_Entry {
+  ...entryInterfaceFields
+  sectionTitle
+}

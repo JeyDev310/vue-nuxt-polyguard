@@ -1,0 +1,3 @@
+fragment productsAssetFields on products_Asset {
+  ...assetInterfaceFields
+}

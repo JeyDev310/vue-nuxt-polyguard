@@ -1,0 +1,26 @@
+mutation savecorporateContactUsSubmission(
+  $yourName: corporateContactUs_yourName_FormieNameInput
+  $emailAddress: String
+  $phoneNumber: String
+  $jobLocation: corporateContactUs_jobLocation_FormieAddressInput
+  $message: String
+) {
+  save_corporateContactUs_Submission(
+    phoneNumber: $phoneNumber
+    emailAddress: $emailAddress
+    jobLocation: $jobLocation
+    message: $message
+    yourName: $yourName
+  ) {
+    yourName {
+      firstName
+      lastName
+    }
+    emailAddress
+    phoneNumber
+    jobLocation {
+      state
+    }
+    message
+  }
+}

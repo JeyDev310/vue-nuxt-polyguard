@@ -1,0 +1,60 @@
+fragment blogDefaultEntryFields on blogDefault_Entry {
+  __typename
+  id
+  status
+  title
+  slug
+  uri
+  postDate @formatDateTime(format: "F j, Y")
+  dateUpdated @formatDateTime(format: "F j, Y")
+  excerptText
+  blogPostContent
+  blogCategories {
+    __typename
+    ... on blogCategoriesDefault_Entry {
+      id
+      title
+      slug
+      uri
+    }
+  }
+  blogFeaturedImage(limit: 1)
+    @transform(
+      width: 1300
+      height: 500
+      mode: "crop"
+      format: "webp"
+      quality: 80
+    ) {
+    ...blogAssetFields
+  }
+  contentAuthors {
+    __typename
+    ... on genericContentAuthor_Entry {
+      typeHandle
+      id
+      title
+      description
+      profileImage {
+        __typename
+        ... on media_Asset {
+          id
+          url
+            @imagerTransform(
+              width: 80
+              height: 80
+              mode: "crop"
+              format: "webp"
+            )
+        }
+      }
+      socialLinks {
+        __typename
+        ... on globalsSocialLink_Entry {
+          socialNetwork
+          socialLinkProfileUrl
+        }
+      }
+    }
+  }
+}

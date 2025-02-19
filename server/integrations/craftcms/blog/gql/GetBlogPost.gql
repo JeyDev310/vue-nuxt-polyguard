@@ -1,0 +1,10 @@
+query GetBlogPost($uri: String) {
+  entry(section: "blogPosts", uri: [$uri]) {
+    ... on blogDefault_Entry {
+      ...blogDefaultEntryFields
+    }
+    seomatic(asArray: true) {
+      ...seomaticFields
+    }
+  }
+}

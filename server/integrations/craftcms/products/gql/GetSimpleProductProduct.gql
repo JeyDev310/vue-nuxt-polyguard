@@ -1,0 +1,8 @@
+query GetSimpleProductProduct($uri: String) {
+  product(type: "simpleProduct", uri: [$uri]) {
+    ...productInterfaceFields
+    ... on simpleProduct_Product {
+      ...simpleProductFields
+    }
+  }
+}

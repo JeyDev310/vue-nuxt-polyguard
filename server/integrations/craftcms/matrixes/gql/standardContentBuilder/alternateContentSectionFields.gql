@@ -1,0 +1,64 @@
+fragment pageSectionsAlternateContentFields on pageSectionsAlternateContent_Entry {
+  ...entryInterfaceFields
+  primaryText
+  secondaryText
+  primaryTextHeading
+  sectionsAlternateContent {
+    ... on blocksAlternateContent_Entry {
+      id
+      richText
+      primaryLink {
+        linkText
+        linkUri
+        url
+      }
+      columnsLayout
+      imagePositioning
+      image {
+        ... on media_Asset {
+          __typename
+          id
+          url: url @imagerTransform(width: 1600)
+          # Transform for base image
+          transform_300: url @imagerTransform(width: 300)
+          # Transform for 3x resolution
+          transform_900: url @imagerTransform(width: 900)
+          webpSrcset: url @imagerTransform(handle: "autoWebp")
+          srcset: url @imagerTransform(handle: "auto")
+          width
+          height
+          size
+          alt
+          title
+        }
+      }
+    }
+  }
+  backgroundColor
+  sectionsAlternateContentBackgroundImages {
+    ... on blocksBackgroundImages_Entry {
+      url
+      xOffset
+      yOffset
+      device
+      position
+      image {
+        ... on media_Asset {
+          __typename
+          id
+          url: url @imagerTransform(width: 300)
+          # Transform for base image
+          transform_300: url @imagerTransform(width: 300)
+          # Transform for 3x resolution
+          transform_900: url @imagerTransform(width: 900)
+          webpSrcset: url @imagerTransform(handle: "autoWebp")
+          srcset: url @imagerTransform(handle: "auto")
+          width
+          height
+          alt
+          title
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+mutation saveTermContactUsSubmission(
+  $yourName: TERMContactUs_yourName_FormieNameInput
+  $emailAddress: String
+  $phoneNumber: String
+  $state: String
+  $message: String
+) {
+  save_TERMContactUs_Submission(
+    phoneNumber: $phoneNumber
+    emailAddress: $emailAddress
+    state: $state
+    message: $message
+    yourName: $yourName
+  ) {
+    yourName {
+      firstName
+      lastName
+    }
+    emailAddress
+    phoneNumber
+    state
+    message
+  }
+}

@@ -1,0 +1,24 @@
+query GetSiteFooter {
+  siteFooterEntries(slug: "site-footer") {
+    ... on globalsSiteFooter_Entry {
+      __typename
+      typeHandle
+      copyrightText
+      blurbText
+      genericLogoImages {
+        ... on media_Asset {
+          __typename
+          alt
+          url: url @imagerTransform(height: 40, format: "webp")
+        }
+      }
+      socialLinks {
+        ... on globalsSocialLink_Entry {
+          __typename
+          socialNetwork
+          socialLinkProfileUrl
+        }
+      }
+    }
+  }
+}

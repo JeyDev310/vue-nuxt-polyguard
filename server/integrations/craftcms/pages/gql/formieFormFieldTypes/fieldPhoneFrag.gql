@@ -1,0 +1,8 @@
+fragment fieldPhoneFrag on Field_Phone {
+  id
+  label
+  countryDefaultValue
+  countryAllowed
+  displayName
+  countryEnabled
+}

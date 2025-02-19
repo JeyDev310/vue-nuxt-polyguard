@@ -1,0 +1,13 @@
+query GetAllFaqs {
+  entryCount(type: "faqsDefault")
+  entries(type: "faqsDefault") {
+    __typename
+    ...entryInterfaceFields
+    ... on faqsDefault_Entry {
+      faqAnswer
+      faqCategories {
+        ...entryInterfaceFields
+      }
+    }
+  }
+}

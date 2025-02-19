@@ -1,0 +1,3 @@
+fragment pagesResourceListingFields on pagesResourceListing_Entry {
+  ...entryInterfaceFields
+}

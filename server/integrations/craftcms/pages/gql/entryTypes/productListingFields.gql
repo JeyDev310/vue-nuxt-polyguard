@@ -1,0 +1,23 @@
+fragment pagesProductListingFields on pagesProductListing_Entry {
+  ...entryInterfaceFields
+  doNotShowProductListingPageInBreadcrumbs
+  topLevelProductCategory {
+    ...entryInterfaceFields
+  }
+
+  topLevelProductDivision {
+    ...entryInterfaceFields
+
+    ... on productDivisions_default_Entry {
+      id
+    }
+  }
+
+  pageHero {
+    ...pageHeroFields
+  }
+
+  standardContentBuilder {
+    ...entryInterfaceFields
+  }
+}

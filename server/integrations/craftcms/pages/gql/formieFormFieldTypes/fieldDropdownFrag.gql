@@ -1,0 +1,11 @@
+fragment fieldDropdownFrag on Field_Dropdown {
+  id
+  label
+  multi
+  options {
+    label
+    value
+    isDefault
+    isOptgroup
+  }
+}

@@ -1,0 +1,5 @@
+fragment pageSectionsRichTextFields on pageSectionsRichText_Entry {
+  ...entryInterfaceFields
+  richText
+  backgroundColor
+}

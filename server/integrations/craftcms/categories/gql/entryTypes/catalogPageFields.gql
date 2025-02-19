@@ -1,0 +1,17 @@
+fragment productCategoriesCatalogPageFields on productCategoriesCatalogPage_Entry {
+  ...entryInterfaceFields
+
+  doNotUseDefaultHeader
+  hideBreadcrumbs
+  showBcbsLogos
+
+  pageHero {
+    ... on EntryInterface {
+      ...pageHeroFields
+    }
+  }
+
+  standardContentBuilder {
+    ...entryInterfaceFields
+  }
+}

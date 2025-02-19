@@ -1,0 +1,16 @@
+fragment pageSectionsLatestNewsFields on pageSectionsLatestNews_Entry {
+  ...entryInterfaceFields
+  primaryText
+  secondaryText
+  primaryLink {
+    linkText
+    linkUri
+    url
+    target
+  }
+  blogCategories {
+    id
+    slug
+    title
+  }
+}

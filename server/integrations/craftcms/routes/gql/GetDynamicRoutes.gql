@@ -1,0 +1,20 @@
+query GetDynamicRoutes {
+  pages: entries(section: "pages") {
+    uri
+  }
+  blogPosts: entries(section: "blog") {
+    uri
+  }
+  blogCategories: entries(section: "blogCategories") {
+    uri
+  }
+  caseStudies: entries(section: "caseStudies") {
+    uri
+  }
+  productCategories: entries(section: "productCategories") {
+    uri
+  }
+  products {
+    uri
+  }
+}

@@ -1,0 +1,30 @@
+mutation saveArchitecturalContactUsSubmission(
+  $yourName: ArchitecturalContactUs_yourName_FormieNameInput
+  $emailAddress: String
+  $phoneNumber: String
+  $message: String
+  $companyName: String
+  $city: String
+  $state: String
+) {
+  save_ArchitecturalContactUs_Submission(
+    phoneNumber: $phoneNumber
+    emailAddress: $emailAddress
+    message: $message
+    city: $city
+    state: $state
+    yourName: $yourName
+    companyName: $companyName
+  ) {
+    yourName {
+      firstName
+      lastName
+    }
+    emailAddress
+    phoneNumber
+    message
+    city
+    state
+    companyName
+  }
+}

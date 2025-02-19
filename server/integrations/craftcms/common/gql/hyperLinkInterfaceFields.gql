@@ -1,0 +1,20 @@
+fragment hyperLinkInterfaceFields on HyperLinkInterface {
+  __typename
+  ariaLabel
+  classes
+  isElement
+  isEmpty
+  link
+  linkText
+  linkUrl
+  linkValue
+  newWindow
+  target
+  text
+  title
+  type
+  url
+  urlPrefix
+  urlSuffix
+  linkUri
+}

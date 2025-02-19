@@ -1,0 +1,54 @@
+fragment pageSectionsCtas2ColumnsFields on pageSectionsCtas2Columns_Entry {
+  ...entryInterfaceFields
+  assetPositioning
+  primaryText
+  asset {
+    __typename
+    alt
+    kind
+    title
+    id
+    url
+    ... on media_Asset {
+      webpSrcset: url @imagerTransform(handle: "autoWebp")
+      srcset: url @imagerTransform(handle: "auto")
+      url
+      width
+      height
+    }
+    embeddedAsset {
+      ... on EmbeddedAsset {
+        title
+        description
+        iframeCode
+        iframeSrc(params: "")
+        image
+        images
+        url
+      }
+    }
+  }
+  contentText
+  primaryLink {
+    linkText
+    linkUri
+    title
+    target
+    linkUrl
+    link
+  }
+  paddingTop
+  paddingBottom
+  backgroundColor
+  primaryImage {
+    ... on media_Asset {
+      __typename
+      id
+      url: url @imagerTransform(width: 300)
+      # Transform for base image
+      transform_300: url @imagerTransform(width: 300)
+      # Transform for 3x resolution
+      transform_900: url @imagerTransform(width: 900)
+    }
+  }
+}

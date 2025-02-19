@@ -1,0 +1,3 @@
+fragment blogAssetFields on blogMedia_Asset {
+  ...assetInterfaceFields
+}

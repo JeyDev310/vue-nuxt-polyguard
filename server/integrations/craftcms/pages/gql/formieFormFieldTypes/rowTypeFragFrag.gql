@@ -1,0 +1,29 @@
+fragment rowTypeFrag on RowType {
+  id
+  rowFields {
+    ...fieldInterfaceFrag
+    ... on Field_Name {
+      ...fieldNameFrag
+    }
+    ... on Field_Dropdown {
+      ...fieldDropdownFrag
+    }
+
+    ... on Field_Agree {
+      ...fieldAgreeFrag
+    }
+    ... on Field_Phone {
+      ...fieldPhoneFrag
+    }
+    ... on Field_Address {
+      id
+      label
+      labelPosition
+      displayName
+      enabled
+      fields {
+        ...fieldInterfaceFrag
+      }
+    }
+  }
+}

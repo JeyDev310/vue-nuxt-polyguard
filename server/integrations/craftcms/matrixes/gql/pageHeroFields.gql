@@ -1,0 +1,16 @@
+fragment pageHeroFields on EntryInterface {
+  ...entryInterfaceFields
+
+  ... on pageHeroLandingPage_Entry {
+    ...pageHeroLandingPageFields
+  }
+  ... on pageHeroTypeform_Entry {
+    ...pageHeroTypeformFields
+  }
+  ... on pageHeroGeneric_Entry {
+    ...pageHeroGenericFields
+  }
+  ... on pageHeroDefaultHeader_Entry {
+    ...pageHeroDefaultHeaderFields
+  }
+}

@@ -1,0 +1,145 @@
+query GetMenuByNavHandle($navHandle: String, $level: Int = 1) {
+  navigationNodes(navHandle: $navHandle, level: $level) {
+    ... on NodeInterface {
+      ...navigationNodeFields
+      children {
+        ... on NodeInterface {
+          ...navigationNodeFields
+        }
+        children {
+          ... on NodeInterface {
+            ...navigationNodeFields
+          }
+        }
+      }
+    }
+    ... on mainNavigation_Node {
+      displayAsRibbon
+      excerptText
+      children {
+        ... on mainNavigation_Node {
+          displayAsRibbon
+          excerptText
+          children {
+            ... on mainNavigation_Node {
+              displayAsRibbon
+              excerptText
+            }
+          }
+        }
+      }
+    }
+    ... on newMainNavigation_Node {
+      displayAsRibbon
+      excerptText
+      children {
+        ... on newMainNavigation_Node {
+          displayAsRibbon
+          excerptText
+          children {
+            ... on architecturalNavigation_Node {
+              displayAsRibbon
+              excerptText
+            }
+          }
+        }
+      }
+    }
+    ... on architecturalNavigation_Node {
+      displayAsRibbon
+      excerptText
+      children {
+        ... on architecturalNavigation_Node {
+          displayAsRibbon
+          excerptText
+          children {
+            ... on architecturalNavigation_Node {
+              displayAsRibbon
+              excerptText
+            }
+          }
+        }
+      }
+    }
+    ... on highwayNavigation_Node {
+      displayAsRibbon
+      excerptText
+      children {
+        ... on highwayNavigation_Node {
+          displayAsRibbon
+          excerptText
+          children {
+            ... on highwayNavigation_Node {
+              displayAsRibbon
+              excerptText
+            }
+          }
+        }
+      }
+    }
+    ... on mechanicalNavigation_Node {
+      displayAsRibbon
+      excerptText
+      children {
+        ... on mechanicalNavigation_Node {
+          displayAsRibbon
+          excerptText
+          children {
+            ... on mechanicalNavigation_Node {
+              displayAsRibbon
+              excerptText
+            }
+          }
+        }
+      }
+    }
+    ... on residentialNavigation_Node {
+      displayAsRibbon
+      excerptText
+      children {
+        ... on residentialNavigation_Node {
+          displayAsRibbon
+          excerptText
+          children {
+            ... on residentialNavigation_Node {
+              displayAsRibbon
+              excerptText
+            }
+          }
+        }
+      }
+    }
+    ... on pipelineNavigation_Node {
+      displayAsRibbon
+      excerptText
+      children {
+        ... on pipelineNavigation_Node {
+          displayAsRibbon
+          excerptText
+          children {
+            ... on pipelineNavigation_Node {
+              displayAsRibbon
+              excerptText
+            }
+          }
+        }
+      }
+    }
+    ... on termNavigation_Node {
+      displayAsRibbon
+      excerptText
+      children {
+        ... on termNavigation_Node {
+          displayAsRibbon
+          excerptText
+          children {
+            ... on termNavigation_Node {
+              displayAsRibbon
+              excerptText
+            }
+          }
+        }
+      }
+    }
+  }
+}

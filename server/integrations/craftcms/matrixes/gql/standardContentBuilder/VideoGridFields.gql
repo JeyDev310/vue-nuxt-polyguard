@@ -1,0 +1,30 @@
+fragment pageSectionsVideoGridFields on pageSectionsVideoGrid_Entry {
+  ...entryInterfaceFields
+  sectionIdName
+  paddingTop
+  paddingBottom
+  backgroundColor
+  videos {
+    ... on blocksVideos_Entry {
+      video {
+        id
+        img
+        embeddedAsset {
+          ... on EmbeddedAsset {
+            title
+            description
+            iframeCode
+            iframeSrc(params: "")
+            image
+            images
+            url
+          }
+        }
+      }
+      videoTitle
+      id
+      url
+      language
+    }
+  }
+}

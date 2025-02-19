@@ -1,0 +1,8 @@
+fragment blogCategoriesDefaultFields on blogCategoriesDefault_Entry {
+  __typename
+  id
+  uri
+  slug
+  level
+  title
+}

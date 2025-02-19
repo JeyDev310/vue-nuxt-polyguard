@@ -1,0 +1,25 @@
+query GetPage($uri: String) {
+  entry(section: "pages", uri: [$uri]) {
+    ... on EntryInterface {
+      ...entryInterfaceFields
+    }
+    ... on pagesChannelListing_Entry {
+      ...pagesChannelListingFields
+    }
+    ... on pagesContentPage_Entry {
+      ...pagesContentPageFields
+    }
+    ... on pagesFaqListing_Entry {
+      ...pagesFaqListingFields
+    }
+    ... on pagesLandingPage_Entry {
+      ...pagesLandingPageFields
+    }
+    ... on pagesProductListing_Entry {
+      ...pagesProductListingFields
+    }
+    ... on pagesResourceListing_Entry {
+      ...pagesResourceListingFields
+    }
+  }
+}

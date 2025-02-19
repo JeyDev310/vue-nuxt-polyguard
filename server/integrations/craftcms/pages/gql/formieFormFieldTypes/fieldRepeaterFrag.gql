@@ -1,0 +1,20 @@
+fragment fieldRepeaterFrag on Field_Repeater {
+  id
+  nestedRows {
+    rowFields {
+      ...fieldInterfaceFrag
+      ... on Field_Dropdown {
+        ...fieldDropdownFrag
+      }
+      ... on Field_Address {
+        ...fieldAddressFrag
+      }
+      ... on Field_Agree {
+        ...fieldAgreeFrag
+      }
+      ... on Field_Phone {
+        ...fieldPhoneFrag
+      }
+    }
+  }
+}

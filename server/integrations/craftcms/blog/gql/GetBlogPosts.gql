@@ -1,0 +1,20 @@
+query GetBlogPosts(
+  $limit: Int = 30
+  $offset: Int = 0
+  $categoryUris: [String] = []
+) {
+  entryCount(
+    section: "blogPosts"
+    relatedToEntries: { section: "blogCategories", uri: $categoryUris }
+  )
+  blogPostsEntries(
+    orderBy: "postDate DESC"
+    limit: $limit
+    offset: $offset
+    relatedToEntries: { section: "blogCategories", uri: $categoryUris }
+  ) {
+    ... on blogDefault_Entry {
+      ...blogDefaultEntryFields
+    }
+  }
+}

@@ -1,0 +1,25 @@
+fragment pageSectionsCtasSimpleBannerFields on pageSectionsCtasSimpleBanner_Entry {
+  ...entryInterfaceFields
+  primaryText
+  secondaryText
+  darkBackground
+  primaryLink {
+    ariaLabel
+    classes
+    isElement
+    isEmpty
+    link
+    linkText
+    linkUrl
+    linkValue
+    newWindow
+    target
+    text
+    title
+    type
+    url
+    urlPrefix
+    urlSuffix
+    linkUri
+  }
+}

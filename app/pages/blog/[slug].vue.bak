@@ -1,0 +1,89 @@
+<script setup lang="ts">
+import {
+  withLeadingSlash,
+  withoutLeadingSlash,
+  withoutTrailingSlash,
+} from 'ufo'
+import type { BreadcrumbItem } from '#shared/types'
+import {
+  ref,
+  useFetch,
+  navigateTo,
+  useRoute,
+  useSeomatic,
+  useHead,
+} from '#imports'
+
+import MainContainer from '~/components/layout/MainContainer.vue'
+import Header from '~/components/layout/Header.vue'
+import Footer from '~/components/layout/Footer.vue'
+import type { UseHeadInput } from '@unhead/vue'
+import type { HeadAugmentations } from '@nuxt/schema'
+
+const route = useRoute()
+
+const uri = withoutLeadingSlash(withoutTrailingSlash(route.path))
+
+const hideBreadcrumbs = ref<boolean>(false)
+
+const { data: blogPost } = await useFetch(`/api/v1/blog/post`, {
+  method: 'POST',
+  body: {
+    uri,
+  },
+})
+
+if (!blogPost.value) {
+  await navigateTo('/404', { redirectCode: 404 })
+}
+
+const { seomaticHeadData } = useSeomatic(blogPost)
+useHead(seomaticHeadData as UseHeadInput<HeadAugmentations>)
+
+const blogBreadcrumbs: Array<BreadcrumbItem> = [
+  {
+    name: 'Home',
+    href: '/',
+    current: false,
+  },
+  {
+    name: 'Blog',
+    href: '/blog',
+    current: false,
+  },
+  {
+    name: blogPost.value?.title || '',
+    href: withLeadingSlash(uri),
+    current: true,
+  },
+]
+
+const breadcrumbs: Array<BreadcrumbItem> = blogBreadcrumbs
+</script>
+
+<template>
+  <div>
+    <Header :breadcrumbs="breadcrumbs" :hide-breadcrumbs="hideBreadcrumbs" />
+    <main class="mt-[18rem]">
+      <section class="my-12">
+        <MainContainer>
+          <!-- H1 Heading and Copy -->
+          <div class="text-center">
+            <h1 class="text-4xl leading-tight md:text-5xl">
+              {{ blogPost?.title }}
+            </h1>
+          </div>
+        </MainContainer>
+      </section>
+
+      <section class="my-8">
+        <MainContainer>
+          <article class="prose mx-auto lg:prose-lg xl:prose-xl">
+            <div v-html="blogPost?.blogPostContent" />
+          </article>
+        </MainContainer>
+      </section>
+    </main>
+    <Footer />
+  </div>
+</template>

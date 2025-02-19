@@ -1,0 +1,16 @@
+fragment mediaGallery_productsAssetFields on products_Asset {
+  ...assetInterfaceFields
+  thumbnailImagerTransforms: imagerTransform(
+    transform: "productGalleryThumbnail"
+  ) {
+    ...imagerTransformedImageFields
+  }
+  mainImagerTransforms: imagerTransform(transform: "productGalleryMain") {
+    ...imagerTransformedImageFields
+  }
+  fullscreenImagerTransforms: imagerTransform(
+    transform: "productGalleryFullscreen"
+  ) {
+    ...imagerTransformedImageFields
+  }
+}

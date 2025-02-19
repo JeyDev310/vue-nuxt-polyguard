@@ -1,0 +1,11 @@
+query GetResourceDivisions {
+  resourceDivisionsEntries {
+    ... on resourceDivisionsDefault_Entry {
+      __typename
+      id
+      uid
+      title
+      slug
+    }
+  }
+}

@@ -1,0 +1,22 @@
+query GetCaseStudies(
+  $limit: Int = 30
+  $offset: Int = 0
+  $categoryUris: [String] = []
+) {
+  entryCount(
+    section: "case-studies"
+    relatedToEntries: { section: "caseStudyCategories", uri: $categoryUris }
+  )
+  caseStudiesEntries(
+    orderBy: "postDate DESC"
+    limit: $limit
+    offset: $offset
+    relatedToEntries: { section: "caseStudyCategories", uri: $categoryUris }
+  ) {
+    __typename
+    ...entryInterfaceFields
+    ... on caseStudiesDefault_Entry {
+      ...caseStudiesDefaultEntry
+    }
+  }
+}

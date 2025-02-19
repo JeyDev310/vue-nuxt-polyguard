@@ -1,0 +1,74 @@
+fragment pageSectionsCtas2ColumnsBannerFields on pageSectionsCtas2ColumnsBanner_Entry {
+  ...entryInterfaceFields
+  primaryText
+  secondaryText
+  primaryLink {
+    linkUri
+    link
+    linkText
+    linkUrl
+  }
+  columnsLayout
+  contentText
+  # this code was causing the following error in Craft CMS:
+
+  #  {
+  #  debugMessage: 'Runtime Object type "backgroundImages2Block_Entry" is not a possible type for "backgroundImages_MatrixField".',
+  #message: 'Internal server error',
+  #extensions: { category: 'internal' },
+  #trace: [
+  #{
+  #file: '/var/www/html/vendor/webonyx/graphql-php/src/Executor/ReferenceExecutor.php',
+  #line: 974,
+  #call: "GraphQL\\Executor\\ReferenceExecutor::ensureValidRuntimeType('backgroundImages2Block_Entry', GraphQLType: backgroundImages_MatrixField, instance of GraphQL\\Type\\Definition\\ResolveInfo, instance of craft\\elements\\Entry)"
+  #},
+  #{
+  #file: '/var/www/html/vendor/webonyx/graphql-php/src/Executor/ReferenceExecutor.php',
+  #line: 789,
+  #call: 'GraphQL\\Executor\\ReferenceExecutor::completeAbstractValue(GraphQLType: backgroundImages_MatrixField, instance of ArrayObject(1), instance of GraphQL\\Type\\Definition\\ResolveInfo, array(4), instance of craft\\elements\\Entry)'
+  #},
+
+  #  backgroundImages {
+  #    ... on backgroundImagesBlock_Entry {
+  #      url
+  #      xOffset
+  #      yOffset
+  #      device
+  #      position
+  #      device
+  #      image {
+  #        ... on media_Asset {
+  #          __typename
+  #          id
+  #          url: url @imagerTransform(width: 300)
+  #          # Transform for base image
+  #          transform_300: url @imagerTransform(width: 300)
+  #          # Transform for 3x resolution
+  #          transform_900: url @imagerTransform(width: 900)
+  #          webpSrcset: url @imagerTransform(handle: "autoWebp")
+  #          srcset: url @imagerTransform(handle: "auto")
+  #          width
+  #          height
+  #          alt
+  #          title
+  #        }
+  #      }
+  #    }
+  #  }
+  image {
+    ... on media_Asset {
+      __typename
+      id
+      url: url @imagerTransform(width: 1600)
+      transform_300: url @imagerTransform(width: 300)
+      transform_900: url @imagerTransform(width: 900)
+      webpSrcset: url @imagerTransform(handle: "autoWebp")
+      srcset: url @imagerTransform(handle: "auto")
+      width
+      height
+      size
+      alt
+      title
+    }
+  }
+}

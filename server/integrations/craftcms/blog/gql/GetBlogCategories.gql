@@ -1,0 +1,8 @@
+query GetBlogCategories {
+  entries(
+    section: "blogCategories"
+    relatedToEntries: { section: "blogPosts" }
+  ) {
+    ...blogCategoriesDefaultFields
+  }
+}

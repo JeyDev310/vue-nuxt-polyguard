@@ -1,0 +1,3 @@
+fragment pageHeroDefaultHeaderFields on pageHeroDefaultHeader_Entry {
+  ...entryInterfaceFields
+}

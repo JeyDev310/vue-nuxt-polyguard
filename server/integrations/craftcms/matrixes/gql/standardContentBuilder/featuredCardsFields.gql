@@ -1,0 +1,23 @@
+fragment pageSectionsFeaturedCardsFields on pageSectionsFeaturedCards_Entry {
+  ...entryInterfaceFields
+  primaryText
+  secondaryText
+  contentText
+  cards {
+    ... on blocksCards_Entry {
+      id
+      image {
+        ... on media_Asset {
+          __typename
+          id
+          url: url @imagerTransform(width: 900)
+          webpSrcset: url @imagerTransform(handle: "autoWebp")
+          srcset: url @imagerTransform(handle: "auto")
+          width
+          height
+        }
+      }
+      richText
+    }
+  }
+}

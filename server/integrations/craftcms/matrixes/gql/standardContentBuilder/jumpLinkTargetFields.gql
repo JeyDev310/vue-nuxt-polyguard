@@ -1,0 +1,4 @@
+fragment pageSectionsJumpLinkTargetFields on pageSectionsJumpLinkTarget_Entry {
+  ...entryInterfaceFields
+  jumpLinkTargetHash
+}

@@ -1,0 +1,59 @@
+fragment bigcommerceProductFields on BigCommerceProduct {
+  __typename
+  bcId
+  bcStatus
+  bodyHtml
+  handle
+  images
+  orderQuantityMaximum
+  orderQuantityMinimum
+  productType
+  sku
+  title
+  createdAt
+  updatedAt
+  vendor
+  options {
+    displayName
+    id
+    name
+    productId
+    sortOrder
+    type
+    optionValues {
+      isDefault
+      label
+      id
+      sortOrder
+      valueData
+    }
+  }
+  variants {
+    weight
+    sku
+    purchasingDisabled
+    productId
+    isFreeShipping
+    imageUrl
+    id
+    price
+    salePrice
+    calculatedPrice
+    purchasingDisabledMessage
+    skuId
+    upc
+    mpn
+    inventoryLevel
+    inventoryWarningLevel
+    calculatedWeight
+    costPrice
+    gtin
+    binPickingNumber
+    optionValues {
+      id
+      label
+      optionId
+      optionDisplayName
+    }
+  }
+}

@@ -1,0 +1,350 @@
+<script setup lang="ts">
+import { ref } from '#imports'
+import { truncate } from '~/utils'
+import type { BigcommerceProductFieldsFragment } from '#shared/types'
+
+import ProductCardInfo from '~/components/products/ProductCardInfo.vue'
+import type { NormalizedProductVariant } from '~/components/products/ProductCardInfo.vue'
+import SimpleCard from '../common/SimpleCard.vue'
+
+import { withLeadingSlash } from 'ufo'
+
+interface Props {
+  productLink: string
+  primaryText: string
+  secondaryText?: string
+  featuredImage?: string
+  productDescription?: string
+  bigcommerceProduct?: BigcommerceProductFieldsFragment | null
+  view?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  featuredImage: '',
+  secondaryText: '',
+  productDescription: '',
+  bigcommerceProduct: undefined,
+  view: 'lists',
+})
+
+// State
+
+// const selectedVariant = ref(bcProduct.bcProductDefaultVariant)
+
+const currentProductVariant = ref<NormalizedProductVariant>()
+
+const cardImage = props.featuredImage ?? ''
+
+const productLink = computed(() => withLeadingSlash(props.productLink))
+
+const hasSalePrice = computed(() => {
+  const _currentProductVariant = currentProductVariant.value
+
+  if (!_currentProductVariant) return false
+
+  return (
+    _currentProductVariant.salePrice !== undefined &&
+    _currentProductVariant.salePrice > 0 &&
+    _currentProductVariant.salePrice < _currentProductVariant.price
+  )
+})
+</script>
+
+<template>
+  <div v-if="view === 'lists'">
+    <div
+      class="z-5 relative h-full rounded-3xl border border-gray-300 p-5 hover:border-gray-50 hover:shadow-2xl"
+    >
+      <div class="flex h-full flex-row justify-between space-y-4">
+        <div
+          v-if="hasSalePrice"
+          class="absolute right-2 top-2 rounded-full bg-red-600 px-6 py-1 text-lg font-bold text-white lg:px-4 lg:text-base xl:px-6 xl:text-lg 2xl:px-8 2xl:py-2 2xl:text-xl"
+        >
+          Sale
+        </div>
+        <!-- Product Image -->
+        <div v-if="cardImage" class="aspect-square relative z-1 mb-2">
+          <!-- Sale Badge -->
+
+          <!-- Product Image -->
+          <div
+            :to="productLink"
+            class="'flex overflow-hidden' h-full w-[250px] items-center justify-center"
+          >
+            <img
+              :srcset="cardImage"
+              class="lazyload lazyload-fade aspect-auto relative inset-0 block h-full w-full object-cover xl:aspect-fullimagecard"
+              loading="lazy"
+            />
+          </div>
+        </div>
+        <div class="mx-4 mt-2 flex w-full flex-row items-center justify-center">
+          <div>
+            <!-- Product Info -->
+            <div class="mb-2">
+              <NuxtLink :to="productLink">
+                <h4 class="text-gray-800" v-html="primaryText" />
+                <p
+                  class="text-sm text-gray-400"
+                  v-html="secondaryText || '&nbsp;'"
+                />
+              </NuxtLink>
+            </div>
+
+            <!-- Product Description -->
+            <div class="mb-8">
+              <NuxtLink :to="productLink">
+                <p
+                  class="text-sm text-gray-600"
+                  v-html="truncate(productDescription, 119)"
+                />
+              </NuxtLink>
+            </div>
+            <div class="mt-3 flex flex-row items-center justify-between py-1.5">
+              <ProductCardInfo
+                v-model="currentProductVariant"
+                :bigcommerce-product="props.bigcommerceProduct"
+                :view="props.view"
+                :link="productLink"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <SimpleCard v-else>
+    <div class="h-full w-full @container">
+      <div
+        class="flex h-full min-h-[536px] w-full max-w-[486px] flex-col items-center gap-6 @2xs:min-h-[460px] @xs:min-h-[450px] @sm:min-h-[440px]"
+      >
+        <div class="w-full">
+          <div v-if="cardImage" class="relative">
+            <!-- Sale Badge -->
+            <div
+              v-if="hasSalePrice"
+              class="z-5 absolute flex w-full justify-end"
+            >
+              <span
+                class="rounded-full bg-red-500 px-8 py-1 text-base uppercase text-white"
+              >
+                Sale
+              </span>
+            </div>
+
+            <!-- Product Image -->
+            <NuxtLink :to="productLink">
+              <img
+                :srcset="cardImage"
+                class="h-[227px] w-full shrink-0 rounded-lg object-contain"
+                loading="lazy"
+              />
+            </NuxtLink>
+          </div>
+        </div>
+        <div class="h-full w-full flex-grow">
+          <div class="flex h-full w-full flex-col justify-between">
+            <div class="py-1">
+              <NuxtLink :to="productLink">
+                <p
+                  class="mb-2 text-[14px] font-normal leading-[18.2px] tracking-normal text-text-gray"
+                  v-html="secondaryText || '&nbsp;'"
+                />
+                <h4
+                  class="font-montserrat text-[22px] font-semibold leading-[28.6px] tracking-normal text-text-gray"
+                  v-html="primaryText"
+                />
+              </NuxtLink>
+            </div>
+
+            <!-- Product Description -->
+            <div class="mb-8">
+              <NuxtLink :to="productLink">
+                <p
+                  class="text-sm text-gray-600"
+                  v-html="truncate(productDescription, 119)"
+                />
+              </NuxtLink>
+            </div>
+
+            <ProductCardInfo
+              v-model="currentProductVariant"
+              :bigcommerce-product="props.bigcommerceProduct"
+              :link="productLink"
+              class="flex items-center justify-between"
+              button-class="ml-auto"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </SimpleCard>
+</template>
+
+<style lang="scss" scoped>
+.input-form {
+  /* This will remove properly input focus box-shadow/ring */
+  &:focus {
+    box-shadow: none;
+    --tw-ring-shadow: none;
+  }
+
+  &--search,
+  &--select,
+  &--textarea,
+  &--text {
+    /* `outline-none` will remove flicker when focusing the input */
+    @apply min-h-12 w-full rounded-forminput border border-tertiary-light bg-white px-6 py-2 text-sm text-tertiary placeholder-tertiary/70 outline-none transition focus:border-primary;
+  }
+
+  &--search,
+  &--textarea,
+  &--text {
+    @apply font-bold text-primary placeholder:font-normal;
+  }
+
+  &--search {
+    @apply pr-14;
+
+    /* Hide the native search icon */
+    &:enabled:read-write:-webkit-any(
+        :focus,
+        :hover
+      )::-webkit-search-cancel-button,
+    &::-webkit-search-cancel-button {
+      @apply hidden h-0 w-0;
+    }
+  }
+
+  /* Input Select */
+  &--select {
+    @apply bg-chevron-select pl-7 pr-14;
+    /* Custom select icon size */
+    background-size: 0.375rem 0.25rem;
+    /* Custom select icon position */
+    background-position: right 1.5rem center;
+
+    &-hasvalue {
+      @apply font-bold text-primary;
+    }
+
+    &--small {
+      @apply min-h-10 pl-5 pr-10 text-xs;
+    }
+  }
+
+  /* Input Textarea */
+  &--textarea {
+    @apply min-h-40 py-6;
+  }
+
+  /* Checkbox */
+  &--checkbox {
+    --tw-ring-inset: none;
+    --tw-ring-color: none;
+    --tw-ring-shadow: none;
+    @apply border-tertiary text-primary hover:border-2 hover:border-primary focus:border-primary focus:shadow-none;
+  }
+
+  /* white background `input-form--inputwhite` */
+  &--inputwhite {
+    @apply bg-white;
+  }
+
+  &--text-xs {
+    @apply text-xs;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-heading;
+}
+.large-font-content {
+  .heading-3,
+  h3 {
+    font-size: 28px;
+    line-height: 40px;
+    @screen md {
+      font-size: 42px;
+      line-height: 60.5px;
+    }
+  }
+  .heading-4,
+  h4 {
+    font-size: 24px;
+    line-height: 39px;
+    @screen md {
+      font-size: 28px;
+      line-height: 48px;
+    }
+  }
+  li,
+  p {
+    font-size: 14px;
+    line-height: 1.4;
+    @screen md {
+      font-size: 18px;
+    }
+  }
+  br {
+    display: none;
+  }
+  table {
+    tr {
+      td {
+        font-size: 18px;
+        line-height: 32px;
+        @apply leading-8;
+        h5 {
+          font-size: 28px;
+          line-height: 53px;
+        }
+      }
+    }
+  }
+}
+.small-font-content h1,
+h1 {
+  font-size: 2.5rem; /* 40px */
+  line-height: 1.1;
+
+  @screen md {
+    font-size: 3rem; /* 48px */
+    line-height: 1.4;
+  }
+}
+.small-font-content h2,
+.small-font-content h3,
+.small-font-content h4,
+h2,
+h3,
+h4 {
+  @apply leading-tight;
+}
+.small-font-content h2,
+h2 {
+  font-size: 2.25rem; /* 36px */
+
+  @screen md {
+    font-size: 2.5rem; /* 40px */
+  }
+}
+.small-font-content h3,
+h3 {
+  font-size: 2rem; /* 32px */
+}
+.small-font-content h4,
+h4 {
+  font-size: 1.5rem; /* 24px */
+}
+.small-font-content h5,
+h5 {
+  font-size: 1.125rem; /* 18px */
+}
+</style>

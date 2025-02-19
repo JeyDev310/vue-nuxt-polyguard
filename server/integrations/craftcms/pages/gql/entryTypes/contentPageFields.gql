@@ -1,0 +1,17 @@
+fragment pagesContentPageFields on pagesContentPage_Entry {
+  ...entryInterfaceFields
+
+  doNotUseDefaultHeader
+  hideBreadcrumbs
+  showBcbsLogos
+
+  pageHero {
+    ... on EntryInterface {
+      ...pageHeroFields
+    }
+  }
+
+  standardContentBuilder {
+    ...entryInterfaceFields
+  }
+}

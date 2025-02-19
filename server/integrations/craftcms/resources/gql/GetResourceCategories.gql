@@ -1,0 +1,11 @@
+query GetResourceCategories {
+  resourceCategoriesEntries {
+    ... on resourcesCategoriesDefault_Entry {
+      __typename
+      id
+      uid
+      title
+      slug
+    }
+  }
+}

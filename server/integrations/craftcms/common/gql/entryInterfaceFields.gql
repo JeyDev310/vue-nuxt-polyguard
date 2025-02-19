@@ -1,0 +1,18 @@
+fragment entryInterfaceFields on EntryInterface {
+  __typename
+  id
+  uid
+  uri
+  title
+  typeId
+  typeHandle
+  siteId
+  siteHandle
+  sectionId
+  sectionHandle
+  seomatic(asArray: true) {
+    ... on SeomaticType {
+      ...seomaticFields
+    }
+  }
+}

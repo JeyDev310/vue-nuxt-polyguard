@@ -1,0 +1,5 @@
+fragment fieldNameFrag on Field_Name {
+  fields {
+    ...fieldInterfaceFrag
+  }
+}

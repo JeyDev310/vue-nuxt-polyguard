@@ -1,0 +1,66 @@
+query GetResources(
+  $offset: Int = 0
+  $limit: Int = 12
+  $searchTerm: String
+  $resourceDivisionsSlugs: [String] = []
+  $resourceCategoriesSlugs: [String] = []
+) {
+  entryCount(
+    section: "resources"
+    search: $searchTerm
+    relatedToEntries: [
+      { section: "resourceDivisions", slug: $resourceDivisionsSlugs }
+      { section: "resourceCategories", slug: $resourceCategoriesSlugs }
+    ]
+  )
+  resourcesEntries(
+    limit: $limit
+    offset: $offset
+    search: $searchTerm
+    relatedToEntries: [
+      { section: "resourceDivisions", slug: $resourceDivisionsSlugs }
+      { section: "resourceCategories", slug: $resourceCategoriesSlugs }
+    ]
+  ) {
+    ... on EntryInterface {
+      __typename
+      typeHandle
+      id
+      uid
+      title
+    }
+    ... on resourcesFileDownload_Entry {
+      resourceDivisions {
+        __typename
+        ... on resourceDivisionsDefault_Entry {
+          title
+        }
+      }
+      resourceAssets {
+        __typename
+        ... on resources_Asset {
+          id
+          url
+          title
+          mimeType
+          kind
+          extension
+        }
+      }
+    }
+    ... on resourcesPageLink_Entry {
+      resourceDivisions {
+        __typename
+        ... on resourceDivisionsDefault_Entry {
+          title
+        }
+      }
+      resourceLink {
+        __typename
+        ... on HyperLinkInterface {
+          ...hyperLinkInterfaceFields
+        }
+      }
+    }
+  }
+}

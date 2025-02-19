@@ -1,0 +1,3 @@
+fragment pageSectionsOembedVideoFields on pageSectionsOembedVideo_Entry {
+  ...entryInterfaceFields
+}

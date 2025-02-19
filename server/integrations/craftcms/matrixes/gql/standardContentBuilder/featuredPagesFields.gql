@@ -1,0 +1,48 @@
+fragment pageSectionsFeaturedPagesFields on pageSectionsFeaturedPages_Entry {
+  ...entryInterfaceFields
+  primaryText
+  secondaryText
+  primaryLink {
+    ariaLabel
+    classes
+    isElement
+    isEmpty
+    link
+    linkText
+    linkUrl
+    linkValue
+    newWindow
+    target
+    text
+    title
+    type
+    url
+    urlPrefix
+    urlSuffix
+    linkUri
+  }
+  cardList {
+    ... on blocksCardList_Entry {
+      id
+      primaryText
+      cardImage {
+        id
+        url
+        uri
+        title
+        srcset: url @imagerSrcset(handle: "auto")
+      }
+      cardLink {
+        link
+        linkText
+        text
+        url
+        linkUri
+      }
+      cardTags
+      secondaryText
+    }
+  }
+  cardStyle
+  backgroundColor
+}

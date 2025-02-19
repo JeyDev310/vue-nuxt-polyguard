@@ -1,0 +1,19 @@
+query GetFilteredFaqs($faqCategoriesIds: [QueryArgument]!) {
+  entryCount(
+    type: "faqsDefault"
+    relatedToEntries: { section: "faqCategories", id: $faqCategoriesIds }
+  )
+  entries(
+    type: "faqsDefault"
+    relatedToEntries: { section: "faqCategories", id: $faqCategoriesIds }
+  ) {
+    __typename
+    ...entryInterfaceFields
+    ... on faqsDefault_Entry {
+      faqAnswer
+      faqCategories {
+        ...entryInterfaceFields
+      }
+    }
+  }
+}

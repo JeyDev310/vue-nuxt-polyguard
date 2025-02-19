@@ -1,0 +1,61 @@
+<script setup lang="ts">
+import { computed } from '#imports'
+import type { CtaSimpleBannerFieldsFragment } from '~~/server/codegen'
+
+interface Props {
+  block?: CtaSimpleBannerFieldsFragment | null
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  block: undefined,
+})
+
+const dark = computed(
+  () => props.block?.darkBackground ?? props.block?.darkBackground ?? false,
+)
+
+const wrapperClasses = computed(() => {
+  if (!dark.value) return ''
+  return 'bg-tertiary-dark/90 relative after:bg-pattern-1 after:absolute after:w-full after:h-full after:inset-0 after:opacity-30'
+})
+
+const buttonClasses = computed(() =>
+  dark.value
+    ? 'inline-flex min-h-10 cursor-pointer items-center rounded-3xl border-2 px-8 py-2 align-middle font-heading text-xs font-medium leading-tight text-white transition border-primary bg-primary focus:bg-primary-dark lg:hover:border-primary-dark lg:hover:bg-primary-dark'
+    : 'inline-flex min-h-10 cursor-pointer items-center rounded-3xl border-2 px-8 py-2 align-middle font-heading text-xs font-medium leading-tight text-white transition border-secondary bg-secondary focus:bg-secondary-dark lg:hover:border-secondary-dark lg:hover:bg-secondary-dark',
+)
+const formatText = (text: string) => {
+  return text.replace(/\n/g, '<br>')
+}
+</script>
+
+<template>
+  <!-- <div>
+    <div class="relative">{{ props.block?.typeHandle }}</div>
+    <pre>{{ props.block }}</pre>
+  </div> -->
+  <section :class="wrapperClasses">
+    <div class="relative z-10 px-6 py-20">
+      <div class="mx-auto max-w-xl">
+        <div :class="['space-y-6 text-center', dark ? 'text-white' : '']">
+          <h4 class="text-2xl leading-10" v-html="props.block?.primaryText" />
+          <p
+            v-if="props.block?.secondaryText"
+            class="text-center"
+            v-html="formatText(props.block?.secondaryText)"
+          />
+          <NuxtLink
+            v-if="props.block?.primaryLink"
+            :to="
+              '/' +
+              (props.block?.primaryLink[0]?.linkUri || '').replace(/^\/+/, '')
+            "
+            :class="buttonClasses"
+          >
+            {{ props.block?.primaryLink[0]?.linkText }}
+          </NuxtLink>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>

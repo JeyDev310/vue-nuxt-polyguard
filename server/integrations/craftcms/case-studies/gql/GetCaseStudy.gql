@@ -1,0 +1,9 @@
+query GetCaseStudy($uri: [String] = []) {
+  entry(uri: $uri) {
+    __typename
+    ...entryInterfaceFields
+    ... on caseStudiesDefault_Entry {
+      ...caseStudiesDefaultEntry
+    }
+  }
+}

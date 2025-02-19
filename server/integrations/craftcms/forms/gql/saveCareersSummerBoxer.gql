@@ -1,0 +1,27 @@
+mutation saveCareersSummerBoxerSubmission(
+  $yourName: CareersSummerBoxer_yourName_FormieNameInput
+  $emailAddress: String
+  $phoneNumber: String
+  $message: String
+  $resume: FileUploadInput
+) {
+  save_CareersSummerBoxer_Submission(
+    phoneNumber: $phoneNumber
+    emailAddress: $emailAddress
+    resume: [$resume]
+    message: $message
+    yourName: $yourName
+  ) {
+    yourName {
+      firstName
+      lastName
+    }
+    emailAddress
+    phoneNumber
+    resume {
+      filename
+      url
+    }
+    message
+  }
+}

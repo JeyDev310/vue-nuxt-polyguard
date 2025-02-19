@@ -1,0 +1,5 @@
+query GetPageHeroEntries($ids: [QueryArgument] = []) {
+  pageHeroFieldEntries(id: $ids) {
+    ...pageHeroFields
+  }
+}

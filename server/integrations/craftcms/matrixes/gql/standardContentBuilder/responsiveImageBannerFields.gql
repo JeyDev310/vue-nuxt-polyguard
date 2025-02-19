@@ -1,0 +1,55 @@
+fragment pageSectionsResponsiveImageBannerFields on pageSectionsResponsiveImageBanner_Entry {
+  ...entryInterfaceFields
+  primaryText
+  bannerLinkedEntry {
+    url
+  }
+  mobileImage {
+    ... on media_Asset {
+      alt
+      title
+      webpSrcset: url @imagerSrcset(handle: "autoWebp")
+      srcset: url @imagerSrcset(handle: "auto")
+      transform_640: url @imagerTransform(width: 640, handle: "autoWebp")
+      url
+      width
+      height
+    }
+  }
+  tabletImage {
+    ... on media_Asset {
+      alt
+      title
+      webpSrcset: url @imagerSrcset(handle: "autoWebp")
+      srcset: url @imagerSrcset(handle: "auto")
+      transform_768: url @imagerTransform(width: 768, handle: "autoWebp")
+      url
+      width
+      height
+    }
+  }
+  desktopImage {
+    ... on media_Asset {
+      alt
+      title
+      webpSrcset: url @imagerSrcset(handle: "autoWebp")
+      srcset: url @imagerSrcset(handle: "auto")
+      transform_1024: url @imagerTransform(width: 1024, handle: "autoWebp")
+      url
+      width
+      height
+    }
+  }
+  desktopXlImage {
+    ... on media_Asset {
+      alt
+      title
+      webpSrcset: url @imagerSrcset(handle: "autoWebp")
+      srcset: url @imagerSrcset(handle: "auto")
+      transform_1280: url @imagerTransform(width: 1280, handle: "autoWebp")
+      url
+      width
+      height
+    }
+  }
+}

@@ -1,0 +1,11 @@
+fragment navigationNodeFields on NodeInterface {
+  __typename
+  id
+  uid
+  type
+  typeLabel
+  level
+  newWindow
+  title
+  nodeUri
+}

@@ -1,0 +1,48 @@
+fragment pageSectionsFeaturedResourcesFields on pageSectionsFeaturedResources_Entry {
+  ...entryInterfaceFields
+  primaryText
+  secondaryText
+  primaryLink {
+    linkText
+    linkUri
+    url
+    link
+    text
+  }
+  resources {
+    ...entryInterfaceFields
+    ... on resourcesFileDownload_Entry {
+      resourceDivisions {
+        __typename
+        ... on resourceDivisionsDefault_Entry {
+          title
+        }
+      }
+      resourceAssets {
+        __typename
+        ... on resources_Asset {
+          id
+          url
+          title
+          mimeType
+          kind
+          extension
+        }
+      }
+    }
+    ... on resourcesPageLink_Entry {
+      resourceDivisions {
+        __typename
+        ... on resourceDivisionsDefault_Entry {
+          title
+        }
+      }
+      resourceLink {
+        __typename
+        ... on HyperLinkInterface {
+          ...hyperLinkInterfaceFields
+        }
+      }
+    }
+  }
+}
